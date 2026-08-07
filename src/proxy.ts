@@ -39,14 +39,14 @@ export async function proxy(request: NextRequest) {
   );
 
   const {
-    data: { session },
-  } = await supabase.auth.getSession();
+    data: { user },
+  } = await supabase.auth.getUser();
 
   const url = request.nextUrl.clone();
 
   // Protected Admin Routes
   if (url.pathname.startsWith("/admin")) {
-    if (!session) {
+    if (!user) {
       url.pathname = "/login";
       url.searchParams.set("redirect", request.nextUrl.pathname);
       return NextResponse.redirect(url);
@@ -55,16 +55,25 @@ export async function proxy(request: NextRequest) {
 
   // Protected Customer Dashboard Route
   if (url.pathname.startsWith("/dashboard")) {
-    if (!session) {
+    if (!user) {
       url.pathname = "/login";
       url.searchParams.set("redirect", request.nextUrl.pathname);
       return NextResponse.redirect(url);
     }
   }
 
+  // Prevent logged in users from visiting login/register
+  if ((url.pathname === "/login" || url.pathname === "/register") && user) {
+    const role =
+      user.user_metadata?.role ||
+      (user.email?.includes("admin") || user.email === "merchant@luxe.com" ? "admin" : "customer");
+    url.pathname = role === "admin" ? "/admin/orders" : "/dashboard";
+    return NextResponse.redirect(url);
+  }
+
   return response;
 }
 
 export const config = {
-  matcher: ["/admin/:path*", "/dashboard/:path*"],
+  matcher: ["/admin/:path*", "/dashboard/:path*", "/login", "/register"],
 };

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import MerchantSidebar from "@/components/layout/MerchantSidebar";
 import Badge from "@/components/ui/Badge";
 import { Modal } from "@/components/ui/Modal";
@@ -8,6 +8,8 @@ import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
 import { MOCK_PRODUCTS, Product } from "@/data/mockData";
 import { useAdminProductActions } from "@/hooks/useProducts";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/features/auth/AuthProvider";
 import { 
   Search, 
   SlidersHorizontal, 
@@ -23,7 +25,27 @@ import {
 } from "lucide-react";
 
 export default function AdminProductsPage() {
+  const router = useRouter();
+  const { user, isAdmin, isLoading } = useAuth();
   const [productsList, setProductsList] = useState<Product[]>(MOCK_PRODUCTS);
+
+  useEffect(() => {
+    if (!isLoading) {
+      if (!user) {
+        router.push("/login?redirect=/admin/products");
+      } else if (!isAdmin) {
+        router.push("/dashboard");
+      }
+    }
+  }, [user, isAdmin, isLoading, router]);
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-[#fff8f6] flex items-center justify-center">
+        <div className="w-8 h-8 border-4 border-[#845331] border-t-transparent rounded-full animate-spin" />
+      </div>
+    );
+  }
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedStatus, setSelectedStatus] = useState("ALL");
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import MerchantSidebar from "@/components/layout/MerchantSidebar";
 import Badge from "@/components/ui/Badge";
 import { Drawer } from "@/components/ui/Drawer";
@@ -9,11 +9,34 @@ import { MOCK_ORDERS, Order } from "@/data/mockData";
 import { createShiprocketShipment, ShipmentDetails } from "@/lib/services/shiprocket";
 import { initiateRazorpayRefund, restoreInventoryForOrder } from "@/lib/services/refunds";
 import { useToast } from "@/components/ui/Toast";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/features/auth/AuthProvider";
 import { Search, Bell, SlidersHorizontal, Truck, XCircle, CheckCircle2, ExternalLink, RefreshCw } from "lucide-react";
 
 export default function AdminOrdersPage() {
+  const router = useRouter();
+  const { user, isAdmin, isLoading } = useAuth();
   const [selectedTab, setSelectedTab] = useState("All Orders");
+
+  useEffect(() => {
+    if (!isLoading) {
+      if (!user) {
+        router.push("/login?redirect=/admin/orders");
+      } else if (!isAdmin) {
+        router.push("/dashboard");
+      }
+    }
+  }, [user, isAdmin, isLoading, router]);
+
   const [selectedOrder, setSelectedOrder] = useState<Order>(MOCK_ORDERS[0]);
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-[#fff8f6] flex items-center justify-center">
+        <div className="w-8 h-8 border-4 border-[#845331] border-t-transparent rounded-full animate-spin" />
+      </div>
+    );
+  }
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [shipment, setShipment] = useState<ShipmentDetails | null>(null);

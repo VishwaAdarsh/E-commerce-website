@@ -23,15 +23,33 @@ import {
   Plus,
   PieChart
 } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/features/auth/AuthProvider";
 import Link from "next/link";
 
 export default function DashboardPage() {
+  const router = useRouter();
+  const { user, isLoading } = useAuth();
   const [categories, setCategories] = useState<CategoryPerformance[]>([]);
   const recentOrders = MOCK_ORDERS.slice(4, 8);
 
   useEffect(() => {
+    if (!isLoading && !user) {
+      router.push("/login?redirect=/dashboard");
+    }
+  }, [user, isLoading, router]);
+
+  useEffect(() => {
     getCategoryPerformance().then(setCategories);
   }, []);
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-[#fff8f6] flex items-center justify-center">
+        <div className="w-8 h-8 border-4 border-[#845331] border-t-transparent rounded-full animate-spin" />
+      </div>
+    );
+  }
 
   const handleExportCsv = () => {
     const exportData = MOCK_ORDERS.map((o) => ({

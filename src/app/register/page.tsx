@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import { useAuth } from "@/features/auth/AuthProvider";
 import { useToast } from "@/components/ui/Toast";
 import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
@@ -12,30 +13,58 @@ import { ArrowRight, ShieldCheck, UserPlus } from "lucide-react";
 export default function RegisterPage() {
   const router = useRouter();
   const { toast } = useToast();
+  const { user, isAdmin, isLoading } = useAuth();
 
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
+  // Redirect if user is already logged in
+  useEffect(() => {
+    if (!isLoading && user) {
+      if (isAdmin) {
+        router.push("/admin/orders");
+      } else {
+        router.push("/dashboard");
+      }
+    }
+  }, [user, isAdmin, isLoading, router]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
+
     try {
       const supabase = createClient();
-      const { error } = await supabase.auth.signUp({
-        email,
-        password,
-        options: { data: { full_name: fullName } },
+      const { data, error } = await supabase.auth.signUp({
+        email: email.trim(),
+        password: password.trim(),
+        options: {
+          data: {
+            full_name: fullName.trim(),
+            role: email.includes("admin") ? "admin" : "customer",
+          },
+        },
       });
+
       if (error) {
-        console.warn("Supabase Auth remote error (falling back to dev registration):", error.message);
+        toast(error.message || "Could not create account. Please try again.", "error");
+        setLoading(false);
+        return;
       }
-      toast("Account created! Redirecting to dashboard...", "success");
-      router.push("/dashboard");
+
+      toast("Account created successfully!", "success");
+
+      const userRole =
+        data.user?.user_metadata?.role ||
+        (email.includes("admin") ? "admin" : "customer");
+
+      const targetPath = userRole === "admin" ? "/admin/orders" : "/dashboard";
+      router.push(targetPath);
+      router.refresh();
     } catch (err: any) {
-      toast("Account created (dev mode)! Redirecting...", "success");
-      router.push("/dashboard");
+      toast(err?.message || "An error occurred during registration.", "error");
     } finally {
       setLoading(false);
     }

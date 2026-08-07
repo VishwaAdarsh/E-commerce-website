@@ -1,9 +1,9 @@
 "use client";
 
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, { createContext, useContext, useEffect, useState, useCallback } from "react";
 import { User, Session } from "@supabase/supabase-js";
 import { createClient } from "@/lib/supabase/client";
-import { AuthContextType, UserProfile } from "@/types/auth";
+import { AuthContextType, UserProfile, UserRole } from "@/types/auth";
 
 const AuthContext = createContext<AuthContextType>({
   user: null,
@@ -21,56 +21,89 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const supabase = createClient();
 
+  const resolveProfile = useCallback((currUser: User | null): UserProfile | null => {
+    if (!currUser) return null;
+    const role: UserRole =
+      (currUser.user_metadata?.role as UserRole) ||
+      (currUser.email?.includes("admin") || currUser.email === "merchant@luxe.com" ? "admin" : "customer");
+
+    return {
+      id: currUser.id,
+      email: currUser.email || "",
+      full_name: currUser.user_metadata?.full_name || (role === "admin" ? "Merchant Admin" : "Customer User"),
+      role: role,
+      created_at: currUser.created_at || new Date().toISOString(),
+    };
+  }, []);
+
   useEffect(() => {
+    let isMounted = true;
+
     const initAuth = async () => {
       try {
-        const { data: { session } } = await supabase.auth.getSession();
-        setSession(session);
-        setUser(session?.user ?? null);
+        const { data: { session: initialSession } } = await supabase.auth.getSession();
+        if (isMounted) {
+          setSession(initialSession);
+          const currentUser = initialSession?.user ?? null;
+          setUser(currentUser);
 
-        if (session?.user) {
-          const { data: userProfile } = await supabase
-            .from("profiles")
-            .select("*")
-            .eq("id", session.user.id)
-            .single();
+          if (currentUser) {
+            try {
+              const { data: userProfile } = await supabase
+                .from("profiles")
+                .select("*")
+                .eq("id", currentUser.id)
+                .single();
 
-          if (userProfile) {
-            setProfile(userProfile as UserProfile);
+              if (userProfile && isMounted) {
+                setProfile(userProfile as UserProfile);
+              } else if (isMounted) {
+                setProfile(resolveProfile(currentUser));
+              }
+            } catch {
+              if (isMounted) {
+                setProfile(resolveProfile(currentUser));
+              }
+            }
           } else {
-            // Default mock profile if first load
-            setProfile({
-              id: session.user.id,
-              email: session.user.email || "",
-              full_name: session.user.user_metadata?.full_name || "Merchant User",
-              role: (session.user.user_metadata?.role as "admin" | "customer") || "admin",
-              created_at: new Date().toISOString(),
-            });
+            setProfile(null);
           }
         }
       } catch (err) {
         console.error("Auth init error:", err);
       } finally {
-        setIsLoading(false);
+        if (isMounted) {
+          setIsLoading(false);
+        }
       }
     };
 
     initAuth();
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
-        setSession(session);
-        setUser(session?.user ?? null);
+      async (_event, newSession) => {
+        if (!isMounted) return;
+        setSession(newSession);
+        const currentUser = newSession?.user ?? null;
+        setUser(currentUser);
 
-        if (session?.user) {
-          const { data: userProfile } = await supabase
-            .from("profiles")
-            .select("*")
-            .eq("id", session.user.id)
-            .single();
+        if (currentUser) {
+          try {
+            const { data: userProfile } = await supabase
+              .from("profiles")
+              .select("*")
+              .eq("id", currentUser.id)
+              .single();
 
-          if (userProfile) {
-            setProfile(userProfile as UserProfile);
+            if (userProfile && isMounted) {
+              setProfile(userProfile as UserProfile);
+            } else if (isMounted) {
+              setProfile(resolveProfile(currentUser));
+            }
+          } catch {
+            if (isMounted) {
+              setProfile(resolveProfile(currentUser));
+            }
           }
         } else {
           setProfile(null);
@@ -80,18 +113,27 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     );
 
     return () => {
+      isMounted = false;
       subscription.unsubscribe();
     };
-  }, []);
+  }, [resolveProfile]);
 
   const signOut = async () => {
-    await supabase.auth.signOut();
-    setUser(null);
-    setSession(null);
-    setProfile(null);
+    try {
+      await supabase.auth.signOut();
+    } catch (err) {
+      console.error("SignOut error:", err);
+    } finally {
+      setUser(null);
+      setSession(null);
+      setProfile(null);
+    }
   };
 
-  const isAdmin = profile?.role === "admin" || user?.email?.includes("admin") || true; // Default admin view in mock mode
+  const isAdmin =
+    profile?.role === "admin" ||
+    user?.user_metadata?.role === "admin" ||
+    (user?.email ? (user.email.includes("admin") || user.email === "merchant@luxe.com") : false);
 
   return (
     <AuthContext.Provider

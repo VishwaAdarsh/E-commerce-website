@@ -4,10 +4,18 @@ import Link from "next/link";
 import { ShoppingBag, User, Heart } from "lucide-react";
 import { useCart } from "@/hooks/useCart";
 import { useWishlist } from "@/hooks/useWishlist";
+import { useAuth } from "@/features/auth/AuthProvider";
 
 export default function Navbar() {
   const { cartItems } = useCart();
   const { wishlistItems } = useWishlist();
+  const { user, isAdmin } = useAuth();
+
+  const userAccountHref = user
+    ? isAdmin
+      ? "/admin/orders"
+      : "/dashboard"
+    : "/login";
 
   return (
     <header className="sticky top-0 z-50 glass-nav border-b border-[#ece0db] transition-all">
@@ -83,9 +91,9 @@ export default function Navbar() {
           </Link>
 
           <Link 
-            href="/dashboard" 
+            href={userAccountHref}
             className="p-2 text-[#201a18] hover:text-[#845331] transition-colors"
-            title="Merchant Portal"
+            title={user ? (isAdmin ? "Admin Portal" : "Customer Dashboard") : "Sign In"}
           >
             <User className="w-5 h-5 stroke-[1.75]" />
           </Link>

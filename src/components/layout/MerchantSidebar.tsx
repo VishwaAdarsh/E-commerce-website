@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import { useAuth } from "@/features/auth/AuthProvider";
 import { 
   LayoutGrid, 
   BarChart3, 
@@ -15,14 +16,22 @@ import {
 
 export default function MerchantSidebar() {
   const pathname = usePathname();
+  const router = useRouter();
+  const { signOut, user, profile } = useAuth();
 
   const navItems = [
     { name: "Overview", href: "/dashboard", icon: LayoutGrid },
-    { name: "Analytics", href: "/admin/orders", icon: BarChart3 }, // Connected to orders view
+    { name: "Analytics", href: "/admin/orders", icon: BarChart3 },
     { name: "Inventory", href: "/admin/products", icon: Package },
     { name: "Customers", href: "#", icon: Users },
     { name: "Settings", href: "#", icon: Settings },
   ];
+
+  const handleSignOut = async () => {
+    await signOut();
+    router.push("/login");
+    router.refresh();
+  };
 
   return (
     <aside className="w-64 bg-[#fff8f6] border-r border-[#ece0db] min-h-screen flex flex-col justify-between p-4 sticky top-0 h-screen">
@@ -38,8 +47,12 @@ export default function MerchantSidebar() {
             />
           </div>
           <div>
-            <h4 className="text-sm font-bold text-[#201a18] leading-tight">Merchant Portal</h4>
-            <p className="text-xs text-[#51443c]">Premium Account</p>
+            <h4 className="text-sm font-bold text-[#201a18] leading-tight">
+              {profile?.full_name || "Merchant Portal"}
+            </h4>
+            <p className="text-xs text-[#51443c] truncate max-w-[130px]">
+              {user?.email || "Premium Account"}
+            </p>
           </div>
         </div>
 
@@ -83,13 +96,13 @@ export default function MerchantSidebar() {
             <HelpCircle className="w-4 h-4 text-[#735949]" />
             <span>Help Center</span>
           </Link>
-          <Link
-            href="/"
-            className="flex items-center space-x-3 px-4 py-2 rounded-xl text-xs font-medium text-[#51443c] hover:bg-[#f8ebe6] hover:text-[#ba1a1a] transition-colors"
+          <button
+            onClick={handleSignOut}
+            className="w-full flex items-center space-x-3 px-4 py-2 rounded-xl text-xs font-medium text-[#51443c] hover:bg-[#f8ebe6] hover:text-[#ba1a1a] transition-colors text-left"
           >
             <LogOut className="w-4 h-4 text-[#735949]" />
             <span>Sign Out</span>
-          </Link>
+          </button>
         </div>
       </div>
     </aside>
