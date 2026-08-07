@@ -1,12 +1,12 @@
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,600&family=Inter:wght@300;400;500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  --background: #fff8f6;
-  --foreground: #201a18;
+  --background: #FAF7F2;
+  --foreground: #151515;
 }
 
 html {
@@ -27,21 +27,31 @@ body {
   font-family: 'Cormorant Garamond', Georgia, serif;
 }
 
+/* PRD-001 Bronze to Gold Text Gradient for Highlight Word "DESIGN." */
+.text-bronze-gradient {
+  background: linear-gradient(135deg, #D4A25A 0%, #A56A3A 50%, #5A381E 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Button Bronze Gradient */
+.bg-bronze-gradient {
+  background: linear-gradient(135deg, #A56A3A 0%, #8C562B 100%);
+}
+
+.bg-bronze-gradient:hover {
+  background: linear-gradient(135deg, #B87642 0%, #A56A3A 100%);
+}
+
 /* Glassmorphism Navigation & Panels */
 .glass-nav {
-  background: rgba(255, 248, 246, 0.85);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  background: rgba(250, 247, 242, 0.88);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
 }
 
 .glass-card {
-  background: rgba(255, 255, 255, 0.7);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-}
-
-.glass-dark {
-  background: rgba(26, 20, 18, 0.85);
+  background: rgba(255, 255, 255, 0.75);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
 }
@@ -53,16 +63,16 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background: #f8ebe6;
+  background: #F5EFE6;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #d6c3b8;
+  background: #E8DDD2;
   border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #845331;
+  background: #A56A3A;
 }
 
 /* Smooth Image Zoom Effects */
@@ -76,26 +86,4 @@ body {
 
 .img-zoom-container:hover img {
   transform: scale(1.08);
-}
-
-/* Editorial Gold Accent Glow */
-.gold-glow {
-  box-shadow: 0 10px 30px -5px rgba(132, 83, 49, 0.25);
-}
-
-.gold-glow-hover:hover {
-  box-shadow: 0 15px 35px -5px rgba(132, 83, 49, 0.3);
-  transform: translateY(-2px);
-}
-
-/* Shimmer Loading Effect */
-@keyframes shimmer {
-  0% { background-position: -200% 0; }
-  100% { background-position: 200% 0; }
-}
-
-.animate-shimmer {
-  background: linear-gradient(90deg, #f8ebe6 25%, #fff8f6 50%, #f8ebe6 75%);
-  background-size: 200% 100%;
-  animation: shimmer 1.8s infinite;
 }
