@@ -1,0 +1,6 @@
+User-Agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /dashboard/
+
+Sitemap: https://luxe-earth-artifact.vercel.app/sitemap.xml

@@ -1,21 +1,18 @@
 # Dependencies
 node_modules/
-
 # Next.js
 .next/
 out/
-
 # Environment
 .env
 .env.local
 .env.*
-
 # Logs
 *.log
-
 # OS
 .DS_Store
 Thumbs.db
-
 # Vercel
 .vercel
+*.node filter=lfs diff=lfs merge=lfs -text
+*.pack filter=lfs diff=lfs merge=lfs -text

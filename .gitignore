@@ -1,5 +1,4 @@
 # dependencies
-/node_modules
 /.pnp
 .pnp.js
 
@@ -7,7 +6,6 @@
 /coverage
 
 # next.js
-/.next/
 /out/
 
 # production
@@ -27,4 +25,3 @@ yarn-error.log*
 
 # typescript
 *.tsbuildinfo
-next-env.d.ts
