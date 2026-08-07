@@ -10,7 +10,7 @@ import { useToast } from "@/components/ui/Toast";
 import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
 import { createRazorpayOrder, verifyRazorpaySignature } from "@/lib/payments/razorpay";
-import { Trash2, Minus, Plus, ArrowRight, ShieldCheck, MapPin, Truck, CreditCard, CheckCircle2 } from "lucide-react";
+import { Trash2, Minus, Plus, ArrowRight, ShieldCheck, MapPin, Truck, CreditCard, CheckCircle2, Lock, Sparkles } from "lucide-react";
 
 export default function CheckoutPage() {
   const router = useRouter();
@@ -44,7 +44,7 @@ export default function CheckoutPage() {
 
   const handleProceedToPayment = async () => {
     setIsProcessing(true);
-    toast("Initializing Razorpay checkout...", "info");
+    toast("Initializing Razorpay secure checkout...", "info");
 
     try {
       // 1. Server Order Creation
@@ -58,7 +58,7 @@ export default function CheckoutPage() {
         const isVerified = verifyRazorpaySignature(razorpayOrder.id, "pay_mock_98234", "sig_mock_8723", "secret");
 
         if (isVerified) {
-          toast("Payment successful! Generating order...", "success");
+          toast("Payment verified! Processing your order...", "success");
           clearCart();
           router.push("/order-success/ORD-9932");
         } else {
@@ -74,202 +74,225 @@ export default function CheckoutPage() {
     <div className="min-h-screen bg-[#fff8f6] flex flex-col font-sans text-[#201a18]">
       <Navbar />
 
-      <main className="flex-grow max-w-7xl mx-auto px-6 py-12 w-full space-y-8">
-        {/* Header Title & Progress */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between border-b border-[#ece0db] pb-6 gap-4">
-          <div>
-            <h1 className="text-3xl font-extrabold tracking-tight text-[#201a18]">
-              Checkout & Payment
+      <main className="flex-grow max-w-7xl mx-auto px-6 md:px-12 py-12 w-full space-y-12">
+        {/* Header Title & Minimalist Stepper */}
+        <div className="flex flex-col md:flex-row md:items-end justify-between border-b border-[#ece0db] pb-8 gap-6">
+          <div className="space-y-2">
+            <div className="inline-flex items-center space-x-2 text-[10px] font-bold tracking-widest uppercase text-[#845331]">
+              <Lock className="w-3.5 h-3.5 text-[#845331]" />
+              <span>SSL 256-BIT ENCRYPTED CHECKOUT</span>
+            </div>
+            <h1 className="font-serif-luxury text-4xl md:text-5xl font-normal text-[#201a18]">
+              Checkout & Acquisition
             </h1>
-            <p className="text-xs text-[#51443c]">
-              Complete your shipping address and secure payment via Razorpay.
-            </p>
           </div>
 
-          {/* Checkout Steps Stepper */}
-          <div className="flex items-center space-x-3 text-xs font-bold">
-            <span className={`flex items-center space-x-1 ${step >= 1 ? "text-[#845331]" : "text-[#84746b]"}`}>
-              <span className="w-5 h-5 rounded-full bg-[#f8ebe6] flex items-center justify-center text-[10px]">1</span>
-              <span>Shipping</span>
-            </span>
+          {/* Stepper Pills */}
+          <div className="flex items-center space-x-2 bg-white p-2 rounded-2xl border border-[#ece0db] shadow-level-1 text-xs font-bold uppercase tracking-wider">
+            <button
+              onClick={() => setStep(1)}
+              className={`px-4 py-2 rounded-xl transition-all ${
+                step >= 1 ? "bg-[#845331] text-white shadow-sm" : "text-[#84746b]"
+              }`}
+            >
+              1. Address
+            </button>
             <span className="text-[#d6c3b8]">/</span>
-            <span className={`flex items-center space-x-1 ${step >= 2 ? "text-[#845331]" : "text-[#84746b]"}`}>
-              <span className="w-5 h-5 rounded-full bg-[#f8ebe6] flex items-center justify-center text-[10px]">2</span>
-              <span>Delivery</span>
-            </span>
+            <button
+              onClick={() => setStep(2)}
+              className={`px-4 py-2 rounded-xl transition-all ${
+                step >= 2 ? "bg-[#845331] text-white shadow-sm" : "text-[#84746b]"
+              }`}
+            >
+              2. Shipping
+            </button>
             <span className="text-[#d6c3b8]">/</span>
-            <span className={`flex items-center space-x-1 ${step >= 3 ? "text-[#845331]" : "text-[#84746b]"}`}>
-              <span className="w-5 h-5 rounded-full bg-[#f8ebe6] flex items-center justify-center text-[10px]">3</span>
-              <span>Payment</span>
-            </span>
+            <button
+              onClick={() => setStep(3)}
+              className={`px-4 py-2 rounded-xl transition-all ${
+                step >= 3 ? "bg-[#845331] text-white shadow-sm" : "text-[#84746b]"
+              }`}
+            >
+              3. Payment
+            </button>
           </div>
         </div>
 
-        {/* Layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-          {/* Main Form Section (7 Cols) */}
-          <div className="lg:col-span-7 space-y-6">
-            {/* Step 1: Shipping Address Form */}
-            <div className="bg-white rounded-3xl p-6 border border-[#ece0db] shadow-level-1 space-y-4">
-              <div className="flex items-center justify-between">
-                <h3 className="text-base font-extrabold text-[#201a18] flex items-center space-x-2">
-                  <MapPin className="w-4 h-4 text-[#845331]" />
-                  <span>1. Shipping Address</span>
+        {/* Main Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+          {/* Left Main Form Section */}
+          <div className="lg:col-span-7 space-y-8">
+            {/* Step 1: Address Card */}
+            <div className="bg-white rounded-[32px] p-8 border border-[#ece0db] shadow-level-1 space-y-6">
+              <div className="flex items-center justify-between border-b border-[#f8ebe6] pb-4">
+                <h3 className="font-serif-luxury text-2xl font-normal text-[#201a18] flex items-center space-x-3">
+                  <MapPin className="w-5 h-5 text-[#845331]" />
+                  <span>1. Client Shipping Address</span>
                 </h3>
                 {step > 1 && (
-                  <button onClick={() => setStep(1)} className="text-xs font-bold text-[#845331] hover:underline">
+                  <button onClick={() => setStep(1)} className="text-xs font-bold uppercase tracking-widest text-[#845331] hover:underline">
                     Edit
                   </button>
                 )}
               </div>
 
               {step === 1 ? (
-                <div className="space-y-4 pt-2">
+                <div className="space-y-5 pt-2">
                   <div>
-                    <label className="text-xs font-bold text-[#51443c] block mb-1">Full Name</label>
+                    <label className="text-[10px] font-bold uppercase tracking-widest text-[#51443c] block mb-1.5">
+                      Full Legal Name
+                    </label>
                     <Input value={fullName} onChange={(e) => setFullName(e.target.value)} required />
                   </div>
 
                   <div>
-                    <label className="text-xs font-bold text-[#51443c] block mb-1">Street Address</label>
+                    <label className="text-[10px] font-bold uppercase tracking-widest text-[#51443c] block mb-1.5">
+                      Street Address & Suite
+                    </label>
                     <Input value={street} onChange={(e) => setStreet(e.target.value)} required />
                   </div>
 
                   <div className="grid grid-cols-3 gap-4">
                     <div>
-                      <label className="text-xs font-bold text-[#51443c] block mb-1">City</label>
+                      <label className="text-[10px] font-bold uppercase tracking-widest text-[#51443c] block mb-1.5">City</label>
                       <Input value={city} onChange={(e) => setCity(e.target.value)} required />
                     </div>
                     <div>
-                      <label className="text-xs font-bold text-[#51443c] block mb-1">State</label>
+                      <label className="text-[10px] font-bold uppercase tracking-widest text-[#51443c] block mb-1.5">State</label>
                       <Input value={state} onChange={(e) => setState(e.target.value)} required />
                     </div>
                     <div>
-                      <label className="text-xs font-bold text-[#51443c] block mb-1">Postal Code</label>
+                      <label className="text-[10px] font-bold uppercase tracking-widest text-[#51443c] block mb-1.5">Postal Code</label>
                       <Input value={postalCode} onChange={(e) => setPostalCode(e.target.value)} required />
                     </div>
                   </div>
 
                   <div>
-                    <label className="text-xs font-bold text-[#51443c] block mb-1">Phone Number</label>
+                    <label className="text-[10px] font-bold uppercase tracking-widest text-[#51443c] block mb-1.5">Phone Number</label>
                     <Input value={phone} onChange={(e) => setPhone(e.target.value)} required />
                   </div>
 
-                  <Button onClick={() => setStep(2)} variant="secondary" className="w-full py-3">
+                  <button
+                    onClick={() => setStep(2)}
+                    className="w-full bg-[#845331] hover:bg-[#73482a] text-white py-4 rounded-2xl text-xs font-bold uppercase tracking-widest transition-all duration-300 shadow-level-2"
+                  >
                     Continue to Delivery Method
-                  </Button>
+                  </button>
                 </div>
               ) : (
-                <div className="text-xs text-[#51443c]">
-                  <p className="font-bold text-[#201a18]">{fullName}</p>
+                <div className="text-xs text-[#51443c] leading-relaxed pt-2">
+                  <p className="font-bold text-[#201a18] text-sm">{fullName}</p>
                   <p>{street}, {city}, {state} {postalCode}</p>
                   <p>{phone}</p>
                 </div>
               )}
             </div>
 
-            {/* Step 2: Shipping Method */}
-            <div className="bg-white rounded-3xl p-6 border border-[#ece0db] shadow-level-1 space-y-4">
-              <div className="flex items-center justify-between">
-                <h3 className="text-base font-extrabold text-[#201a18] flex items-center space-x-2">
-                  <Truck className="w-4 h-4 text-[#845331]" />
-                  <span>2. Delivery Method</span>
+            {/* Step 2: Shipping Options */}
+            <div className="bg-white rounded-[32px] p-8 border border-[#ece0db] shadow-level-1 space-y-6">
+              <div className="flex items-center justify-between border-b border-[#f8ebe6] pb-4">
+                <h3 className="font-serif-luxury text-2xl font-normal text-[#201a18] flex items-center space-x-3">
+                  <Truck className="w-5 h-5 text-[#845331]" />
+                  <span>2. Delivery Courier</span>
                 </h3>
                 {step > 2 && (
-                  <button onClick={() => setStep(2)} className="text-xs font-bold text-[#845331] hover:underline">
+                  <button onClick={() => setStep(2)} className="text-xs font-bold uppercase tracking-widest text-[#845331] hover:underline">
                     Edit
                   </button>
                 )}
               </div>
 
               {step === 2 && (
-                <div className="space-y-3 pt-2">
+                <div className="space-y-4 pt-2">
                   <label
                     onClick={() => setShippingCost(0)}
-                    className={`flex items-center justify-between p-4 rounded-2xl border cursor-pointer transition-all ${
+                    className={`flex items-center justify-between p-5 rounded-2xl border cursor-pointer transition-all ${
                       shippingCost === 0
                         ? "border-[#845331] bg-[#f8ebe6] shadow-sm"
                         : "border-[#d6c3b8] bg-white hover:bg-[#fff8f6]"
                     }`}
                   >
                     <div>
-                      <h4 className="text-xs font-bold text-[#201a18]">Standard Delivery (Free)</h4>
-                      <p className="text-[11px] text-[#84746b]">Delivered in 3-5 business days</p>
+                      <h4 className="text-xs font-bold text-[#201a18] uppercase tracking-wider">Complimentary Express Shipping</h4>
+                      <p className="text-[11px] text-[#84746b]">Insured global delivery in 3-5 business days</p>
                     </div>
                     <span className="text-xs font-extrabold text-[#845331]">$0.00</span>
                   </label>
 
                   <label
                     onClick={() => setShippingCost(15)}
-                    className={`flex items-center justify-between p-4 rounded-2xl border cursor-pointer transition-all ${
+                    className={`flex items-center justify-between p-5 rounded-2xl border cursor-pointer transition-all ${
                       shippingCost === 15
                         ? "border-[#845331] bg-[#f8ebe6] shadow-sm"
                         : "border-[#d6c3b8] bg-white hover:bg-[#fff8f6]"
                     }`}
                   >
                     <div>
-                      <h4 className="text-xs font-bold text-[#201a18]">Express Overnight Shipping</h4>
-                      <p className="text-[11px] text-[#84746b]">Delivered next business day</p>
+                      <h4 className="text-xs font-bold text-[#201a18] uppercase tracking-wider">Priority Overnight Courier</h4>
+                      <p className="text-[11px] text-[#84746b]">Priority handling and next-day arrival</p>
                     </div>
                     <span className="text-xs font-extrabold text-[#845331]">$15.00</span>
                   </label>
 
-                  <Button onClick={() => setStep(3)} variant="secondary" className="w-full py-3">
+                  <button
+                    onClick={() => setStep(3)}
+                    className="w-full bg-[#845331] hover:bg-[#73482a] text-white py-4 rounded-2xl text-xs font-bold uppercase tracking-widest transition-all duration-300 shadow-level-2"
+                  >
                     Continue to Payment
-                  </Button>
+                  </button>
                 </div>
               )}
             </div>
 
-            {/* Step 3: Payment Selection & Review */}
-            <div className="bg-white rounded-3xl p-6 border border-[#ece0db] shadow-level-1 space-y-4">
-              <h3 className="text-base font-extrabold text-[#201a18] flex items-center space-x-2">
-                <CreditCard className="w-4 h-4 text-[#845331]" />
-                <span>3. Payment Gateway (Razorpay)</span>
+            {/* Step 3: Payment Section */}
+            <div className="bg-white rounded-[32px] p-8 border border-[#ece0db] shadow-level-1 space-y-6">
+              <h3 className="font-serif-luxury text-2xl font-normal text-[#201a18] flex items-center space-x-3">
+                <CreditCard className="w-5 h-5 text-[#845331]" />
+                <span>3. Secure Payment Gateway (Razorpay)</span>
               </h3>
 
               {step === 3 && (
-                <div className="space-y-4 pt-2">
-                  <div className="p-4 bg-[#f8ebe6] rounded-2xl border border-[#faba90] space-y-2 text-xs">
+                <div className="space-y-6 pt-2">
+                  <div className="p-6 bg-[#201a18] text-white rounded-2xl border border-[#362b27] space-y-3">
                     <div className="flex items-center justify-between">
-                      <span className="font-extrabold text-[#774827]">Razorpay Secure Checkout</span>
-                      <ShieldCheck className="w-5 h-5 text-[#845331]" />
+                      <span className="text-xs font-bold uppercase tracking-widest text-[#faba90]">
+                        RAZORPAY MAISON GATEWAY
+                      </span>
+                      <ShieldCheck className="w-5 h-5 text-[#faba90]" />
                     </div>
-                    <p className="text-[#51443c]">
-                      Supports Credit/Debit Cards, Net Banking, UPI, and Digital Wallets with server-side HMAC signature verification.
+                    <p className="text-xs text-white/70 leading-relaxed font-normal">
+                      Encrypted signature verification. Accepts international credit cards, Apple Pay, Net Banking, and Digital Wallets.
                     </p>
                   </div>
 
-                  <Button
+                  <button
                     onClick={handleProceedToPayment}
                     disabled={isProcessing || cartItems.length === 0}
-                    variant="secondary"
-                    size="lg"
-                    className="w-full py-4 text-xs font-black tracking-wide"
+                    className="w-full bg-[#845331] hover:bg-[#73482a] disabled:opacity-50 text-white py-5 rounded-2xl text-xs font-bold uppercase tracking-widest transition-all duration-300 shadow-level-3 flex items-center justify-center space-x-3"
                   >
-                    {isProcessing ? "Processing Payment..." : `Pay $${grandTotal.toFixed(2)} with Razorpay`}
-                    <ArrowRight className="w-4 h-4 ml-2" />
-                  </Button>
+                    <span>{isProcessing ? "Verifying Payment..." : `Authorize Payment — $${grandTotal.toFixed(2)}`}</span>
+                    <ArrowRight className="w-4 h-4" />
+                  </button>
                 </div>
               )}
             </div>
           </div>
 
-          {/* Order Summary & Cart Items (5 Cols) */}
-          <div className="lg:col-span-5 space-y-6">
-            <div className="bg-white rounded-3xl p-6 border border-[#ece0db] shadow-level-1 space-y-6">
-              <h2 className="text-base font-extrabold text-[#201a18]">
-                Order Summary ({cartItems.length})
+          {/* Right Summary Column */}
+          <div className="lg:col-span-5 space-y-6 sticky top-28">
+            <div className="bg-white rounded-[32px] p-8 border border-[#ece0db] shadow-level-2 space-y-6">
+              <h2 className="font-serif-luxury text-2xl font-normal text-[#201a18]">
+                Acquisition Summary ({cartItems.length})
               </h2>
 
-              <div className="space-y-3 max-h-60 overflow-y-auto pr-1">
+              <div className="space-y-4 max-h-64 overflow-y-auto pr-1 divide-y divide-[#f8ebe6]">
                 {cartItems.map((item) => (
-                  <div key={item.id} className="flex items-center justify-between text-xs border-b border-[#f8ebe6] pb-3 last:border-0">
+                  <div key={item.id} className="pt-3 first:pt-0 flex items-center justify-between text-xs">
                     <div className="flex items-center space-x-3">
-                      <img src={item.product.image} alt={item.product.name} className="w-10 h-10 rounded-xl object-cover border border-[#ece0db] bg-[#f8ebe6]" />
+                      <img src={item.product.image} alt={item.product.name} className="w-12 h-12 rounded-xl object-cover border border-[#ece0db] bg-[#f8ebe6]" />
                       <div>
-                        <h4 className="font-bold text-[#201a18] line-clamp-1">{item.product.name}</h4>
-                        <p className="text-[10px] text-[#84746b]">Qty: {item.quantity}</p>
+                        <h4 className="font-serif-luxury text-sm font-bold text-[#201a18] line-clamp-1">{item.product.name}</h4>
+                        <p className="text-[10px] text-[#84746b]">Qty: {item.quantity} • {item.variant}</p>
                       </div>
                     </div>
                     <span className="font-extrabold text-[#201a18]">${(item.product.price * item.quantity).toFixed(2)}</span>
@@ -284,27 +307,27 @@ export default function CheckoutPage() {
                 </div>
                 {appliedCoupon && (
                   <div className="flex justify-between text-[#845331] font-semibold">
-                    <span>Discount ({appliedCoupon.code})</span>
+                    <span>Privilege Discount ({appliedCoupon.code})</span>
                     <span>-${discountAmount.toFixed(2)}</span>
                   </div>
                 )}
                 <div className="flex justify-between text-[#51443c]">
-                  <span>Shipping</span>
+                  <span>Courier Delivery</span>
                   <span className="font-bold text-[#201a18]">${shippingCost.toFixed(2)}</span>
                 </div>
               </div>
 
               <div className="flex justify-between items-baseline pt-1">
-                <span className="text-sm font-bold text-[#201a18]">Grand Total</span>
-                <span className="text-2xl font-extrabold text-[#845331]">${grandTotal.toFixed(2)}</span>
+                <span className="text-sm font-bold text-[#201a18] uppercase tracking-wider">Total</span>
+                <span className="font-serif-luxury text-3xl font-bold text-[#845331]">${grandTotal.toFixed(2)}</span>
               </div>
 
-              {/* Coupon Code Section */}
-              <div className="space-y-2">
+              {/* Promo Privilege Code */}
+              <div className="space-y-2 pt-2">
                 {appliedCoupon ? (
-                  <div className="flex items-center justify-between p-3 bg-[#f8ebe6] rounded-xl border border-[#faba90]">
+                  <div className="flex items-center justify-between p-3.5 bg-[#f8ebe6] rounded-xl border border-[#faba90]">
                     <div className="flex items-center space-x-2 text-xs text-[#845331] font-bold">
-                      <CheckCircle2 className="w-4 h-4" />
+                      <CheckCircle2 className="w-4 h-4 text-[#845331]" />
                       <span>{appliedCoupon.code} (-{appliedCoupon.discountPercentage}%)</span>
                     </div>
                     <button onClick={removeCoupon} className="text-xs text-[#ba1a1a] font-bold hover:underline">
@@ -315,10 +338,10 @@ export default function CheckoutPage() {
                   <div className="flex items-center space-x-2">
                     <input
                       type="text"
-                      placeholder="Try: WELCOME10 or LUXE20"
+                      placeholder="Promo Code: WELCOME10"
                       value={inputCouponCode}
                       onChange={(e) => setInputCouponCode(e.target.value)}
-                      className="flex-grow bg-[#f8ebe6]/60 border border-[#d6c3b8] rounded-xl px-4 py-2 text-xs text-[#201a18] placeholder-[#84746b] focus:outline-none focus:border-[#845331]"
+                      className="flex-grow bg-[#f8ebe6]/60 border border-[#d6c3b8] rounded-xl px-4 py-2.5 text-xs text-[#201a18] placeholder-[#84746b] focus:outline-none focus:border-[#845331]"
                     />
                     <Button onClick={handleApplyCoupon} variant="outline" size="sm">
                       Apply

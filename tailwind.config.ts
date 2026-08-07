@@ -5,6 +5,7 @@ const config: Config = {
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/features/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
     extend: {
@@ -51,15 +52,19 @@ const config: Config = {
       },
       fontFamily: {
         sans: ["Inter", "sans-serif"],
+        serif: ["'Cormorant Garamond'", "Georgia", "serif"],
       },
       borderRadius: {
         xl: "12px",
         "2xl": "16px",
+        "3xl": "24px",
+        "4xl": "32px",
       },
       boxShadow: {
-        "level-1": "0 1px 3px rgba(0,0,0,0.05)",
-        "level-2": "0 10px 15px -3px rgba(0,0,0,0.08)",
-        "soft-glow": "0 8px 30px rgba(132, 83, 49, 0.08)",
+        "level-1": "0 2px 10px rgba(32, 26, 24, 0.04)",
+        "level-2": "0 12px 30px -4px rgba(32, 26, 24, 0.08)",
+        "level-3": "0 24px 50px -12px rgba(132, 83, 49, 0.15)",
+        "soft-glow": "0 8px 30px rgba(132, 83, 49, 0.12)",
       },
     },
   },

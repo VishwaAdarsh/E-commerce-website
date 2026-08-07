@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -9,21 +9,44 @@
   --foreground: #201a18;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   color: var(--foreground);
   background-color: var(--background);
   font-family: 'Inter', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
 }
 
+/* Luxury Serif Typography */
+.font-serif-luxury {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+}
+
+/* Glassmorphism Navigation & Panels */
 .glass-nav {
   background: rgba(255, 248, 246, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.7);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
 }
 
-/* Custom scrollbar for tables */
+.glass-dark {
+  background: rgba(26, 20, 18, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+/* Custom Luxury Scrollbar */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
@@ -40,4 +63,39 @@ body {
 
 ::-webkit-scrollbar-thumb:hover {
   background: #845331;
+}
+
+/* Smooth Image Zoom Effects */
+.img-zoom-container {
+  overflow: hidden;
+}
+
+.img-zoom-container img {
+  transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.img-zoom-container:hover img {
+  transform: scale(1.08);
+}
+
+/* Editorial Gold Accent Glow */
+.gold-glow {
+  box-shadow: 0 10px 30px -5px rgba(132, 83, 49, 0.25);
+}
+
+.gold-glow-hover:hover {
+  box-shadow: 0 15px 35px -5px rgba(132, 83, 49, 0.3);
+  transform: translateY(-2px);
+}
+
+/* Shimmer Loading Effect */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.animate-shimmer {
+  background: linear-gradient(90deg, #f8ebe6 25%, #fff8f6 50%, #f8ebe6 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.8s infinite;
 }
