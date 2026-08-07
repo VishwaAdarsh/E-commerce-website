@@ -2,187 +2,230 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { ArrowRight, ShieldCheck, Wrench, Leaf, Truck, Compass, ArrowUpRight } from "lucide-react";
+import { 
+  ArrowRight, 
+  ShieldCheck, 
+  RefreshCw, 
+  Leaf, 
+  Play, 
+  Package, 
+  Lock, 
+  Headphones, 
+  ArrowUpRight 
+} from "lucide-react";
 import { MOCK_PRODUCTS } from "@/data/mockData";
 
 export function HeroBanner() {
-  const featuredProduct = MOCK_PRODUCTS[0]; // Artisanal Terracotta Vessel or similar
+  const featuredProduct = MOCK_PRODUCTS[0];
 
   return (
-    <section className="relative min-h-auto md:min-h-[90vh] lg:min-h-screen flex items-center justify-center overflow-hidden bg-[#FAF7F2] py-8 lg:py-0">
-      {/* Background Soft Lighting Gradients */}
-      <div className="absolute top-0 left-0 w-[550px] h-[550px] bg-[#D4A25A]/15 rounded-full blur-[140px] pointer-events-none" />
-      <div className="absolute bottom-0 right-0 w-[650px] h-[650px] bg-[#A56A3A]/10 rounded-full blur-[160px] pointer-events-none" />
+    <div className="flex flex-col w-full">
+      {/* 1. Main Hero Dark Section (100vh on Desktop) */}
+      <section className="relative min-h-screen flex items-center justify-center bg-[#14110F] text-white overflow-hidden pt-6 pb-12 lg:py-0">
+        
+        {/* Soft Dramatic Spotlight Lighting behind right ceramics */}
+        <div className="absolute top-1/4 right-1/4 w-[600px] h-[600px] bg-[#D49B53]/20 rounded-full blur-[160px] pointer-events-none" />
+        <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-[#382E29]/40 rounded-full blur-[140px] pointer-events-none" />
 
-      <div className="max-w-7xl mx-auto px-6 md:px-12 w-full relative z-10 pt-4 pb-12 lg:py-0">
-        {/* 12-Column Grid Layout: Left 5 Columns, Right 7 Columns */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
-          
-          {/* MOBILE ORDER: 1. Hero Image (Shown on mobile above copy) */}
-          <div className="block lg:hidden w-full order-1">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.96 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.5 }}
-              className="relative aspect-[4/5] rounded-3xl overflow-hidden shadow-level-2 border border-[#E8DDD2]"
-            >
-              <img
-                src="https://images.unsplash.com/photo-1578749556568-bc2c40e68b61?q=80&w=1000&auto=format&fit=crop"
-                alt="Editorial luxury hero showcase"
-                className="w-full h-full object-cover"
-              />
-            </motion.div>
-          </div>
-
-          {/* LEFT COLUMN: 5 Columns on Desktop (Desktop Order 1, Mobile Order 2) */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-            className="lg:col-span-5 space-y-6 lg:space-y-8 text-left order-2 lg:order-1"
-          >
-            {/* Small Capsule Badge */}
-            <div className="inline-flex items-center space-x-2 bg-white/80 backdrop-blur-md border border-[#E8DDD2] px-4 py-1.5 rounded-full text-[10px] font-bold tracking-[0.25em] uppercase text-[#A56A3A] shadow-level-1">
-              <span>2026 COLLECTION</span>
+        <div className="max-w-7xl mx-auto px-6 md:px-12 w-full relative z-10">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-8 items-center min-h-[80vh]">
+            
+            {/* MOBILE ORDER: 1. Hero Image (Shown on mobile above copy) */}
+            <div className="block lg:hidden w-full order-1">
+              <motion.div
+                initial={{ opacity: 0, scale: 0.96 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.6 }}
+                className="relative aspect-[4/3] rounded-3xl overflow-hidden shadow-2xl border border-white/10"
+              >
+                <img
+                  src="https://images.unsplash.com/photo-1610701596007-11502861dcfa?q=80&w=1200&auto=format&fit=crop"
+                  alt="Artisanal Terracotta Vessels"
+                  className="w-full h-full object-cover object-center"
+                />
+              </motion.div>
             </div>
 
-            {/* Main Editorial Heading with Bronze-Gold Gradient on "DESIGN." */}
-            <h1 className="font-serif-luxury text-4xl sm:text-5xl md:text-6xl lg:text-6xl font-normal tracking-tight text-[#151515] leading-[1.06]">
-              UNCOMPROMISING <br />
-              <span className="text-bronze-gradient font-semibold italic">DESIGN.</span> <br />
-              TIMELESS LIVING.
-            </h1>
-
-            {/* Description (Max width 520px, 3 lines max, Soft Gray) */}
-            <p className="text-xs sm:text-sm text-[#5F5F5F] leading-relaxed max-w-[520px] font-normal tracking-wide">
-              An extraordinary collection of curated lifestyle artifacts, engineered with sustainable craftsmanship and timeless aesthetic discipline.
-            </p>
-
-            {/* CTA Section */}
-            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 pt-2">
-              {/* Primary CTA Button */}
-              <Link href="/shop" className="w-full sm:w-auto">
-                <button className="w-full sm:w-auto bg-bronze-gradient text-white px-8 py-4 rounded-2xl text-xs font-bold uppercase tracking-widest transition-all duration-300 shadow-bronze-glow hover:-translate-y-1 flex items-center justify-center space-x-3 group min-h-[48px]">
-                  <span>Explore Collection</span>
-                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                </button>
-              </Link>
-
-              {/* Secondary CTA Button */}
-              <Link href="/shop" className="w-full sm:w-auto">
-                <button className="w-full sm:w-auto bg-white/80 backdrop-blur-md border border-[#E8DDD2] hover:bg-white text-[#151515] px-8 py-4 rounded-2xl text-xs font-bold uppercase tracking-widest transition-all duration-300 shadow-level-1 flex items-center justify-center space-x-2 min-h-[48px]">
-                  <Compass className="w-4 h-4 text-[#A56A3A]" />
-                  <span>View Lookbook</span>
-                </button>
-              </Link>
-            </div>
-
-            {/* Trust Indicators (4 items with minimal icons) */}
-            <div className="pt-6 border-t border-[#E8DDD2] grid grid-cols-2 sm:grid-cols-4 gap-4 text-[#5F5F5F]">
-              <div className="flex items-center space-x-2">
-                <ShieldCheck className="w-4 h-4 text-[#A56A3A] flex-shrink-0" />
-                <span className="text-[11px] font-medium tracking-wider">Handcrafted</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <Wrench className="w-4 h-4 text-[#A56A3A] flex-shrink-0" />
-                <span className="text-[11px] font-medium tracking-wider">Lifetime Repair</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <Leaf className="w-4 h-4 text-[#A56A3A] flex-shrink-0" />
-                <span className="text-[11px] font-medium tracking-wider">Sustainable</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <Truck className="w-4 h-4 text-[#A56A3A] flex-shrink-0" />
-                <span className="text-[11px] font-medium tracking-wider">Worldwide</span>
-              </div>
-            </div>
-          </motion.div>
-
-          {/* RIGHT COLUMN: 7 Columns on Desktop (Desktop Hero Image + Floating Product Card) */}
-          <div className="hidden lg:block lg:col-span-7 relative order-1 lg:order-2">
+            {/* LEFT COLUMN: 6 Columns - Editorial Headline, Description, CTAs, Trust Badges */}
             <motion.div
-              initial={{ opacity: 0, scale: 0.96 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-              className="relative aspect-[4/5] rounded-[36px] overflow-hidden shadow-level-3 border border-[#E8DDD2] group"
-            >
-              <img
-                src="https://images.unsplash.com/photo-1578749556568-bc2c40e68b61?q=80&w=1200&auto=format&fit=crop"
-                alt="Editorial luxury hero photography"
-                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000 ease-out"
-              />
-
-              {/* Soft Gradient Overlay */}
-              <div className="absolute inset-0 bg-gradient-to-t from-[#151515]/50 via-transparent to-transparent pointer-events-none" />
-            </motion.div>
-
-            {/* Floating Featured Product Card (Bottom Right over Hero Image) */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.4 }}
-              className="absolute -bottom-6 -right-6 w-80 glass-card p-4 rounded-3xl border border-white/80 shadow-level-3 z-20"
+              transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+              className="lg:col-span-6 space-y-8 order-2 lg:order-1 text-left"
             >
-              <div className="flex items-center space-x-4">
-                <img
-                  src={featuredProduct.image}
-                  alt={featuredProduct.name}
-                  className="w-16 h-16 rounded-2xl object-cover border border-[#E8DDD2] flex-shrink-0"
-                />
-                <div className="flex-grow min-w-0">
-                  <span className="text-[9px] font-bold uppercase tracking-widest text-[#A56A3A] block">
-                    {featuredProduct.category}
-                  </span>
-                  <h4 className="font-serif-luxury text-sm font-bold text-[#151515] truncate">
-                    {featuredProduct.name}
-                  </h4>
-                  <p className="text-xs font-extrabold text-[#A56A3A] mt-0.5">
-                    ${featuredProduct.price.toFixed(2)}
-                  </p>
-                </div>
-                <Link
-                  href={`/shop/${featuredProduct.id}`}
-                  className="p-2.5 bg-[#A56A3A] hover:bg-[#8C562B] text-white rounded-xl flex-shrink-0 transition-colors shadow-sm"
-                  title="View Product"
-                >
-                  <ArrowUpRight className="w-4 h-4" />
+              {/* Massive Headline matching exact mockup text and gradient */}
+              <div className="space-y-1">
+                <h1 className="font-sans text-5xl sm:text-6xl md:text-7xl lg:text-7xl font-extrabold tracking-tight text-[#FAF7F2] uppercase leading-[0.98]">
+                  UNCOMPROMISING <br />
+                  <span className="text-gold-gradient">DESIGN.</span> <br />
+                  TIMELESS LIVING.
+                </h1>
+              </div>
+
+              {/* Subtitle / Description */}
+              <div className="space-y-1 text-xs sm:text-sm text-[#C5BDB7] tracking-wide max-w-lg font-normal leading-relaxed">
+                <p>Curated artifacts for the modern home.</p>
+                <p>Designed to inspire. Crafted to last.</p>
+              </div>
+
+              {/* CTA Buttons */}
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 pt-2">
+                {/* Primary CTA */}
+                <Link href="/shop" className="w-full sm:w-auto">
+                  <button className="w-full sm:w-auto bg-gold-btn text-[#14110F] px-8 py-4 rounded-xl text-xs font-bold uppercase tracking-widest transition-all duration-300 shadow-xl flex items-center justify-center space-x-3 group min-h-[48px]">
+                    <span>EXPLORE COLLECTION</span>
+                    <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform text-[#14110F]" />
+                  </button>
                 </Link>
+
+                {/* Secondary CTA */}
+                <Link href="/shop" className="w-full sm:w-auto">
+                  <button className="w-full sm:w-auto bg-white/5 hover:bg-white/10 border border-[#4A3C35] text-white px-8 py-4 rounded-xl text-xs font-bold uppercase tracking-widest transition-all duration-300 backdrop-blur-md flex items-center justify-center space-x-2.5 min-h-[48px]">
+                    <div className="w-5 h-5 rounded-full bg-white/10 flex items-center justify-center text-white">
+                      <Play className="w-2.5 h-2.5 fill-white ml-0.5" />
+                    </div>
+                    <span>VIEW LOOKBOOK</span>
+                  </button>
+                </Link>
+              </div>
+
+              {/* Trust Indicators (3 Horizontal Badges) */}
+              <div className="pt-6 border-t border-white/10 grid grid-cols-1 sm:grid-cols-3 gap-6 text-white">
+                {/* Badge 1 */}
+                <div className="flex items-center space-x-3">
+                  <div className="p-2 rounded-xl bg-white/5 border border-white/10 text-[#D49B53]">
+                    <ShieldCheck className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <h4 className="text-[11px] font-bold uppercase tracking-wider text-white">ARTISANAL QUALITY</h4>
+                    <p className="text-[10px] text-[#A89F99]">Handcrafted with care</p>
+                  </div>
+                </div>
+
+                {/* Badge 2 */}
+                <div className="flex items-center space-x-3">
+                  <div className="p-2 rounded-xl bg-white/5 border border-white/10 text-[#D49B53]">
+                    <RefreshCw className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <h4 className="text-[11px] font-bold uppercase tracking-wider text-white">LIFETIME REPAIR</h4>
+                    <p className="text-[10px] text-[#A89F99]">For every purchase</p>
+                  </div>
+                </div>
+
+                {/* Badge 3 */}
+                <div className="flex items-center space-x-3">
+                  <div className="p-2 rounded-xl bg-white/5 border border-white/10 text-[#D49B53]">
+                    <Leaf className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <h4 className="text-[11px] font-bold uppercase tracking-wider text-white">SUSTAINABLE SOURCING</h4>
+                    <p className="text-[10px] text-[#A89F99]">Eco-conscious choice</p>
+                  </div>
+                </div>
               </div>
             </motion.div>
-          </div>
 
-          {/* MOBILE ORDER: Floating Featured Product Card on Mobile */}
-          <div className="block lg:hidden w-full order-3 pt-4">
-            <div className="glass-card p-4 rounded-3xl border border-[#E8DDD2] shadow-level-2">
-              <div className="flex items-center space-x-4">
+            {/* RIGHT COLUMN: 6 Columns - Dramatic Photography & Floating Glass Card */}
+            <div className="hidden lg:block lg:col-span-6 relative order-1 lg:order-2">
+              <motion.div
+                initial={{ opacity: 0, scale: 0.96 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.9, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+                className="relative aspect-[4/3] lg:aspect-[1/1] rounded-[40px] overflow-hidden shadow-2xl group border border-white/10"
+              >
                 <img
-                  src={featuredProduct.image}
-                  alt={featuredProduct.name}
-                  className="w-14 h-14 rounded-2xl object-cover border border-[#E8DDD2] flex-shrink-0"
+                  src="https://images.unsplash.com/photo-1610701596007-11502861dcfa?q=80&w=1200&auto=format&fit=crop"
+                  alt="Artisanal Ceramic & Terracotta Tableware"
+                  className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-1000 ease-out"
                 />
-                <div className="flex-grow min-w-0">
-                  <span className="text-[9px] font-bold uppercase tracking-widest text-[#A56A3A] block">
-                    FEATURED ARTIFACT
-                  </span>
-                  <h4 className="font-serif-luxury text-sm font-bold text-[#151515] truncate">
-                    {featuredProduct.name}
-                  </h4>
-                  <p className="text-xs font-extrabold text-[#A56A3A]">
-                    ${featuredProduct.price.toFixed(2)}
-                  </p>
+
+                <div className="absolute inset-0 bg-gradient-to-t from-[#14110F]/80 via-transparent to-transparent pointer-events-none" />
+              </motion.div>
+
+              {/* Floating Featured Product Card (Bottom Right of Image) */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.5 }}
+                className="absolute -bottom-6 right-4 w-80 glass-card-dark p-4 rounded-3xl z-20 shadow-2xl"
+              >
+                <div className="flex items-center space-x-4">
+                  <img
+                    src={featuredProduct.image}
+                    alt={featuredProduct.name}
+                    className="w-16 h-16 rounded-full object-cover border border-[#D49B53]/40 flex-shrink-0"
+                  />
+                  <div className="flex-grow min-w-0">
+                    <span className="text-[9px] font-bold uppercase tracking-widest text-[#D49B53] block">
+                      FEATURED ARTIFACT
+                    </span>
+                    <h4 className="font-serif-luxury text-sm font-bold text-white truncate">
+                      {featuredProduct.name}
+                    </h4>
+                    <p className="text-xs font-extrabold text-[#D49B53] mt-0.5">
+                      ${featuredProduct.price.toFixed(2)}
+                    </p>
+                  </div>
+                  <Link
+                    href={`/shop/${featuredProduct.id}`}
+                    className="p-2.5 bg-[#D49B53] hover:bg-[#B87E39] text-[#14110F] rounded-xl flex-shrink-0 transition-colors"
+                    title="View Product"
+                  >
+                    <ArrowUpRight className="w-4 h-4" />
+                  </Link>
                 </div>
-                <Link
-                  href={`/shop/${featuredProduct.id}`}
-                  className="p-2.5 bg-[#A56A3A] text-white rounded-xl flex-shrink-0"
-                >
-                  <ArrowUpRight className="w-4 h-4" />
-                </Link>
+              </motion.div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      {/* 2. Bottom Features Strip (Off-White Background matching mockup bottom) */}
+      <section className="bg-[#FAF7F2] text-[#151515] py-8 border-y border-[#E8DDD2]">
+        <div className="max-w-7xl mx-auto px-6 md:px-12">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center divide-x-0 md:divide-x divide-[#E8DDD2]">
+            
+            {/* Feature 1 */}
+            <div className="flex flex-col items-center p-3 space-y-2">
+              <Package className="w-6 h-6 text-[#A56A3A]" />
+              <div>
+                <h4 className="text-xs font-bold uppercase tracking-wider text-[#151515]">FREE SHIPPING</h4>
+                <p className="text-[11px] text-[#5F5F5F]">On orders over $150</p>
               </div>
             </div>
-          </div>
 
+            {/* Feature 2 */}
+            <div className="flex flex-col items-center p-3 space-y-2">
+              <RefreshCw className="w-6 h-6 text-[#A56A3A]" />
+              <div>
+                <h4 className="text-xs font-bold uppercase tracking-wider text-[#151515]">EASY RETURNS</h4>
+                <p className="text-[11px] text-[#5F5F5F]">30-day return policy</p>
+              </div>
+            </div>
+
+            {/* Feature 3 */}
+            <div className="flex flex-col items-center p-3 space-y-2">
+              <Lock className="w-6 h-6 text-[#A56A3A]" />
+              <div>
+                <h4 className="text-xs font-bold uppercase tracking-wider text-[#151515]">SECURE PAYMENT</h4>
+                <p className="text-[11px] text-[#5F5F5F]">100% secure checkout</p>
+              </div>
+            </div>
+
+            {/* Feature 4 */}
+            <div className="flex flex-col items-center p-3 space-y-2">
+              <Headphones className="w-6 h-6 text-[#A56A3A]" />
+              <div>
+                <h4 className="text-xs font-bold uppercase tracking-wider text-[#151515]">24/7 SUPPORT</h4>
+                <p className="text-[11px] text-[#5F5F5F]">We're here to help</p>
+              </div>
+            </div>
+
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
+    </div>
   );
 }
