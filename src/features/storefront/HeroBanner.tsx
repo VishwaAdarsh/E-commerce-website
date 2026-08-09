@@ -1,8 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { motion } from "framer-motion";
 import { ArrowRight, Sparkles, ShieldCheck, Truck, RotateCcw } from "lucide-react";
+import { HeroImageSlider } from "@/features/storefront/HeroImageSlider";
 
 export function HeroBanner() {
   return (
@@ -14,7 +14,7 @@ export function HeroBanner() {
       <div className="max-w-7xl mx-auto px-6 md:px-12 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
           
-          {/* Left Column — Editorial Campaign Copy */}
+          {/* Left Column — Editorial Campaign Copy (Completely Unchanged) */}
           <div className="lg:col-span-6 space-y-6 text-left">
             <div className="inline-flex items-center space-x-2 bg-[#F2ECE4] border border-[#E6DED5] px-3.5 py-1.5 rounded-full text-[11px] font-bold tracking-widest uppercase text-[#A56B4F]">
               <Sparkles className="w-3.5 h-3.5 text-[#A56B4F]" />
@@ -64,26 +64,9 @@ export function HeroBanner() {
             </div>
           </div>
 
-          {/* Right Column — Large Product Visual Composition */}
+          {/* Right Column — Isolated Product Image Slider */}
           <div className="lg:col-span-6 relative">
-            <div className="relative aspect-[4/3] rounded-3xl overflow-hidden shadow-card border border-[#E6DED5] bg-white group">
-              <img
-                src="https://images.unsplash.com/photo-1578749556568-bc2c40e68b61?q=80&w=1200&auto=format&fit=crop"
-                alt="Featured Product Collection"
-                className="w-full h-full object-cover img-hover-zoom"
-              />
-
-              {/* Floating Featured Product Badge */}
-              <div className="absolute bottom-4 left-4 right-4 p-4 bg-white/95 backdrop-blur-md rounded-2xl border border-[#E6DED5] shadow-dropdown flex items-center justify-between">
-                <div>
-                  <span className="text-[9px] font-bold uppercase tracking-widest text-[#A56B4F] block">
-                    FEATURED ITEM
-                  </span>
-                  <h4 className="text-sm font-bold text-[#181512]">Artisanal Terracotta Vessel</h4>
-                </div>
-                <span className="text-sm font-extrabold text-[#171310]">₹1,800</span>
-              </div>
-            </div>
+            <HeroImageSlider />
           </div>
 
         </div>
