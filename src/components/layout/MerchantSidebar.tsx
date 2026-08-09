@@ -7,11 +7,16 @@ import {
   LayoutGrid, 
   BarChart3, 
   Package, 
+  FolderTree,
+  Boxes,
+  ShoppingBag,
+  Ticket,
   Users, 
+  LifeBuoy,
+  FileSpreadsheet,
   Settings, 
-  HelpCircle, 
   LogOut,
-  ArrowUpRight
+  ExternalLink
 } from "lucide-react";
 
 export default function MerchantSidebar() {
@@ -19,12 +24,47 @@ export default function MerchantSidebar() {
   const router = useRouter();
   const { signOut, user, profile } = useAuth();
 
-  const navItems = [
-    { name: "Overview", href: "/dashboard", icon: LayoutGrid },
-    { name: "Analytics", href: "/admin/orders", icon: BarChart3 },
-    { name: "Inventory", href: "/admin/products", icon: Package },
-    { name: "Customers", href: "#", icon: Users },
-    { name: "Settings", href: "#", icon: Settings },
+  const navGroups = [
+    {
+      group: "OVERVIEW",
+      items: [
+        { name: "Dashboard", href: "/admin/dashboard", icon: LayoutGrid },
+      ],
+    },
+    {
+      group: "CATALOG",
+      items: [
+        { name: "Products", href: "/admin/products", icon: Package },
+        { name: "Categories", href: "/admin/categories", icon: FolderTree },
+        { name: "Inventory", href: "/admin/inventory", icon: Boxes },
+      ],
+    },
+    {
+      group: "SALES",
+      items: [
+        { name: "Orders", href: "/admin/orders", icon: ShoppingBag },
+        { name: "Coupons", href: "/admin/coupons", icon: Ticket },
+      ],
+    },
+    {
+      group: "CUSTOMERS",
+      items: [
+        { name: "Customers", href: "/admin/customers", icon: Users },
+        { name: "Support Desk", href: "/admin/support", icon: LifeBuoy },
+      ],
+    },
+    {
+      group: "ANALYTICS",
+      items: [
+        { name: "Reports", href: "/admin/reports", icon: FileSpreadsheet },
+      ],
+    },
+    {
+      group: "SYSTEM",
+      items: [
+        { name: "Store Settings", href: "/admin/settings", icon: Settings },
+      ],
+    },
   ];
 
   const handleSignOut = async () => {
@@ -34,76 +74,78 @@ export default function MerchantSidebar() {
   };
 
   return (
-    <aside className="w-64 bg-[#fff8f6] border-r border-[#ece0db] min-h-screen flex flex-col justify-between p-4 sticky top-0 h-screen">
+    <aside className="w-64 bg-white border-r border-[#E6DED5] min-h-screen flex flex-col justify-between p-4 sticky top-0 h-screen overflow-y-auto">
       {/* Top Section */}
       <div className="space-y-6">
-        {/* User Account Header */}
-        <div className="flex items-center space-x-3 px-2 py-2">
-          <div className="w-10 h-10 rounded-full bg-[#845331] text-white flex items-center justify-center font-bold text-sm overflow-hidden border border-[#d6c3b8]">
-            <img 
-              src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=120&auto=format&fit=crop" 
-              alt="Merchant Profile" 
-              className="w-full h-full object-cover"
-            />
-          </div>
-          <div>
-            <h4 className="text-sm font-bold text-[#201a18] leading-tight">
-              {profile?.full_name || "Merchant Portal"}
-            </h4>
-            <p className="text-xs text-[#51443c] truncate max-w-[130px]">
-              {user?.email || "Premium Account"}
-            </p>
+        {/* Brand & Admin Profile */}
+        <div className="space-y-3 pb-4 border-b border-[#E6DED5]">
+          <Link href="/" className="font-serif-luxury text-xl font-bold tracking-[0.2em] text-[#171310] block px-2">
+            LUXE ERP
+          </Link>
+          
+          <div className="flex items-center space-x-3 px-2 py-2 bg-[#FAF7F2] rounded-2xl border border-[#E6DED5]">
+            <div className="w-9 h-9 rounded-full bg-[#171310] text-[#FAF7F2] flex items-center justify-center font-bold text-xs shadow-subtle flex-shrink-0">
+              {profile?.full_name?.charAt(0) || "A"}
+            </div>
+            <div className="min-w-0">
+              <h4 className="text-xs font-bold text-[#181512] truncate">
+                {profile?.full_name || "Merchant Admin"}
+              </h4>
+              <p className="text-[10px] text-[#6F6861] truncate">
+                {user?.email || "merchant@luxe.com"}
+              </p>
+            </div>
           </div>
         </div>
 
-        {/* Navigation Menu */}
-        <nav className="space-y-1">
-          {navItems.map((item) => {
-            const Icon = item.icon;
-            const isActive = pathname === item.href;
-            return (
-              <Link
-                key={item.name}
-                href={item.href}
-                className={`flex items-center space-x-3 px-4 py-2.5 rounded-xl text-sm font-medium transition-all ${
-                  isActive
-                    ? "bg-[#faba90] text-[#201a18] font-semibold shadow-sm"
-                    : "text-[#51443c] hover:bg-[#f8ebe6] hover:text-[#201a18]"
-                }`}
-              >
-                <Icon className={`w-4 h-4 ${isActive ? "text-[#845331]" : "text-[#735949]"}`} />
-                <span>{item.name}</span>
-              </Link>
-            );
-          })}
+        {/* Grouped Navigation */}
+        <nav className="space-y-5">
+          {navGroups.map((group) => (
+            <div key={group.group} className="space-y-1">
+              <span className="px-3 text-[10px] font-bold uppercase tracking-widest text-[#A56B4F] block">
+                {group.group}
+              </span>
+              {group.items.map((item) => {
+                const Icon = item.icon;
+                const isActive = pathname === item.href;
+                return (
+                  <Link
+                    key={item.name}
+                    href={item.href}
+                    className={`flex items-center space-x-3 px-3 py-2 rounded-xl text-xs font-semibold transition-all ${
+                      isActive
+                        ? "bg-[#171310] text-white shadow-subtle"
+                        : "text-[#6F6861] hover:bg-[#FAF7F2] hover:text-[#181512]"
+                    }`}
+                  >
+                    <Icon className={`w-4 h-4 ${isActive ? "text-[#A56B4F]" : "text-[#6F6861]"}`} />
+                    <span>{item.name}</span>
+                  </Link>
+                );
+              })}
+            </div>
+          ))}
         </nav>
       </div>
 
       {/* Bottom Section */}
-      <div className="space-y-4 pt-4 border-t border-[#ece0db]">
-        {/* Upgrade Plan CTA Button */}
-        <button className="w-full bg-[#845331] hover:bg-[#73482a] text-white py-2.5 px-4 rounded-xl text-sm font-medium flex items-center justify-center space-x-2 shadow-sm transition-all">
-          <span>Upgrade Plan</span>
-          <ArrowUpRight className="w-4 h-4" />
-        </button>
+      <div className="space-y-3 pt-4 border-t border-[#E6DED5]">
+        <Link
+          href="/"
+          target="_blank"
+          className="w-full bg-[#FAF7F2] hover:bg-[#E6DED5]/50 text-[#181512] py-2 px-3 rounded-xl text-xs font-bold transition-colors flex items-center justify-between border border-[#E6DED5]"
+        >
+          <span>View Customer Site</span>
+          <ExternalLink className="w-3.5 h-3.5 text-[#A56B4F]" />
+        </Link>
 
-        {/* Secondary Links */}
-        <div className="space-y-1">
-          <Link
-            href="#"
-            className="flex items-center space-x-3 px-4 py-2 rounded-xl text-xs font-medium text-[#51443c] hover:bg-[#f8ebe6] hover:text-[#201a18] transition-colors"
-          >
-            <HelpCircle className="w-4 h-4 text-[#735949]" />
-            <span>Help Center</span>
-          </Link>
-          <button
-            onClick={handleSignOut}
-            className="w-full flex items-center space-x-3 px-4 py-2 rounded-xl text-xs font-medium text-[#51443c] hover:bg-[#f8ebe6] hover:text-[#ba1a1a] transition-colors text-left"
-          >
-            <LogOut className="w-4 h-4 text-[#735949]" />
-            <span>Sign Out</span>
-          </button>
-        </div>
+        <button
+          onClick={handleSignOut}
+          className="w-full flex items-center space-x-3 px-3 py-2 rounded-xl text-xs font-bold text-[#B74747] hover:bg-[#B74747]/10 transition-colors text-left"
+        >
+          <LogOut className="w-4 h-4 text-[#B74747]" />
+          <span>Sign Out Session</span>
+        </button>
       </div>
     </aside>
   );

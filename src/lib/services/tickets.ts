@@ -1,4 +1,5 @@
 import { SupportTicket } from "@/types/erp";
+export type { SupportTicket };
 
 export const MOCK_TICKETS: SupportTicket[] = [
   {
@@ -25,7 +26,7 @@ export const MOCK_TICKETS: SupportTicket[] = [
     subject: "Shipping delay query for Order #ORD-9931",
     priority: "Medium",
     status: "In Progress",
-    assignedTo: "Pradeep (Super Admin)",
+    assignedTo: "Merchant Admin",
     createdAt: "2026-08-06 10:15",
     messages: [
       {
@@ -41,11 +42,24 @@ export async function getSupportTickets(): Promise<SupportTicket[]> {
   return MOCK_TICKETS;
 }
 
+export async function getTickets(): Promise<SupportTicket[]> {
+  return MOCK_TICKETS;
+}
+
 export async function getTicketById(ticketId: string): Promise<SupportTicket | null> {
   const found = MOCK_TICKETS.find(
     (t) => t.id.toLowerCase() === ticketId.trim().toLowerCase()
   );
   return found || null;
+}
+
+export async function updateTicketStatus(ticketId: string, status: SupportTicket["status"]): Promise<boolean> {
+  const ticket = MOCK_TICKETS.find((t) => t.id === ticketId);
+  if (ticket) {
+    ticket.status = status;
+    return true;
+  }
+  return false;
 }
 
 export async function createSupportTicket(data: {
