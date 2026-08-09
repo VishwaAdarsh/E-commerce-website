@@ -44,16 +44,27 @@ export async function proxy(request: NextRequest) {
 
   const url = request.nextUrl.clone();
 
-  // Protected Admin Routes
-  if (url.pathname.startsWith("/admin")) {
+  // 1. Protected Admin Routes (/admin/*)
+  if (url.pathname.startsWith("/admin") && url.pathname !== "/admin/login") {
     if (!user) {
-      url.pathname = "/login";
+      url.pathname = "/admin/login";
       url.searchParams.set("redirect", request.nextUrl.pathname);
+      return NextResponse.redirect(url);
+    }
+
+    // Role check for admin
+    const role =
+      user.user_metadata?.role ||
+      (user.email?.includes("admin") || user.email === "merchant@luxe.com" ? "admin" : "customer");
+
+    if (role !== "admin") {
+      // Non-admin attempting to access admin routes -> redirect to customer dashboard
+      url.pathname = "/dashboard";
       return NextResponse.redirect(url);
     }
   }
 
-  // Protected Customer Dashboard Route
+  // 2. Protected Customer Dashboard Route (/dashboard/*)
   if (url.pathname.startsWith("/dashboard")) {
     if (!user) {
       url.pathname = "/login";
@@ -62,11 +73,20 @@ export async function proxy(request: NextRequest) {
     }
   }
 
-  // Prevent logged in users from visiting login/register
+  // 3. Login / Register Page Redirects for Authenticated Users
   if ((url.pathname === "/login" || url.pathname === "/register") && user) {
     const role =
       user.user_metadata?.role ||
       (user.email?.includes("admin") || user.email === "merchant@luxe.com" ? "admin" : "customer");
+    
+    // Check if there is an explicit redirect query parameter (e.g. /login?redirect=/checkout)
+    const redirectParam = request.nextUrl.searchParams.get("redirect");
+    if (redirectParam && redirectParam !== "/login" && redirectParam !== "/admin/login") {
+      url.pathname = redirectParam;
+      url.searchParams.delete("redirect");
+      return NextResponse.redirect(url);
+    }
+
     url.pathname = role === "admin" ? "/admin/orders" : "/dashboard";
     return NextResponse.redirect(url);
   }

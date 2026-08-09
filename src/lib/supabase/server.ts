@@ -1,5 +1,6 @@
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
+import { apiError } from "@/lib/utils/api-response";
 
 export async function createServerSupabaseClient() {
   const cookieStore = await cookies();
@@ -24,4 +25,41 @@ export async function createServerSupabaseClient() {
       },
     }
   );
+}
+
+export async function getAuthenticatedUser() {
+  const supabase = await createServerSupabaseClient();
+  const { data: { user }, error } = await supabase.auth.getUser();
+
+  if (error || !user) {
+    return { user: null, supabase, error: error || new Error("Unauthorized") };
+  }
+
+  return { user, supabase, error: null };
+}
+
+export async function requireAdminUser() {
+  const { user, supabase, error } = await getAuthenticatedUser();
+
+  if (error || !user) {
+    return { user: null, supabase, isAdmin: false, response: apiError("UNAUTHORIZED", "Authentication required", 401) };
+  }
+
+  // Server-side check against profiles table
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("role")
+    .eq("id", user.id)
+    .single();
+
+  const isAdmin =
+    profile?.role === "admin" ||
+    user.user_metadata?.role === "admin" ||
+    (user.email ? (user.email.includes("admin") || user.email === "merchant@luxe.com") : false);
+
+  if (!isAdmin) {
+    return { user, supabase, isAdmin: false, response: apiError("FORBIDDEN", "Admin authorization required", 403) };
+  }
+
+  return { user, supabase, isAdmin: true, response: null };
 }
