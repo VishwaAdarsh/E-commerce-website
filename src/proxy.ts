@@ -45,18 +45,34 @@ export async function proxy(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const isAuthenticated = !!user || demoAdminSession || demoCustomerSession;
-  const isUserAdmin = demoAdminSession || (user && (
+  const url = request.nextUrl.clone();
+  const path = url.pathname;
+
+  const isSupabaseAdmin = !!user && (
     user.user_metadata?.role === "admin" ||
     user.email?.includes("admin") ||
     user.email === "merchant@luxe.com" ||
     user.email?.includes("selby.thomas")
-  ));
+  );
 
-  const url = request.nextUrl.clone();
+  const isUserAdmin = demoAdminSession || isSupabaseAdmin;
+  const isAuthenticated = !!user || demoAdminSession || demoCustomerSession;
 
-  // 1. Protected Admin Routes (/admin/*)
-  if (url.pathname.startsWith("/admin") && url.pathname !== "/admin/login") {
+  // 1. PUBLIC ROUTE: /admin/login must ALWAYS render cleanly for unauthenticated users
+  if (path === "/admin/login") {
+    if (isUserAdmin) {
+      // Already authenticated as Admin -> redirect to /admin/orders
+      const redirectParam = url.searchParams.get("redirect");
+      url.pathname = redirectParam || "/admin/orders";
+      url.searchParams.delete("redirect");
+      return NextResponse.redirect(url);
+    }
+    // Unauthenticated or customer -> render /admin/login freely
+    return response;
+  }
+
+  // 2. PROTECTED ADMIN ROUTES: /admin/* (e.g. /admin/orders, /admin/products)
+  if (path.startsWith("/admin")) {
     if (!isAuthenticated) {
       url.pathname = "/admin/login";
       url.searchParams.set("redirect", request.nextUrl.pathname);
@@ -64,13 +80,14 @@ export async function proxy(request: NextRequest) {
     }
 
     if (!isUserAdmin) {
+      // Authenticated as Customer -> 403 Forbidden / Redirect to customer dashboard
       url.pathname = "/dashboard";
       return NextResponse.redirect(url);
     }
   }
 
-  // 2. Protected Customer Dashboard Route (/dashboard/*)
-  if (url.pathname.startsWith("/dashboard")) {
+  // 3. PROTECTED CUSTOMER ROUTE: /dashboard/*
+  if (path.startsWith("/dashboard")) {
     if (!isAuthenticated) {
       url.pathname = "/login";
       url.searchParams.set("redirect", request.nextUrl.pathname);
@@ -78,19 +95,17 @@ export async function proxy(request: NextRequest) {
     }
   }
 
-  // 3. Login / Register Page Redirects for Authenticated Users
-  if ((url.pathname === "/login" || url.pathname === "/register" || url.pathname === "/admin/login") && isAuthenticated) {
-    const redirectParam = request.nextUrl.searchParams.get("redirect");
+  // 4. CUSTOMER LOGIN & REGISTER PAGES: /login, /register
+  if ((path === "/login" || path === "/register") && isAuthenticated) {
+    const redirectParam = url.searchParams.get("redirect");
     if (redirectParam && redirectParam !== "/login" && redirectParam !== "/admin/login") {
       url.pathname = redirectParam;
       url.searchParams.delete("redirect");
       return NextResponse.redirect(url);
     }
 
-    if (url.pathname === "/admin/login" && isUserAdmin) {
-      url.pathname = "/admin/orders";
-      return NextResponse.redirect(url);
-    }
+    url.pathname = isUserAdmin ? "/admin/orders" : "/dashboard";
+    return NextResponse.redirect(url);
   }
 
   return response;
