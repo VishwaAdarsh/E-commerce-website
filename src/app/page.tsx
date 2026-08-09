@@ -1,285 +1,293 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import Navbar from "@/components/layout/Navbar";
+import { MobileNav } from "@/components/layout/MobileNav";
 import Footer from "@/components/layout/Footer";
 import ProductCard from "@/components/ui/ProductCard";
-import { MOCK_PRODUCTS, Product } from "@/data/mockData";
+import { MOCK_PRODUCTS } from "@/data/mockData";
 import { HeroBanner } from "@/features/storefront/HeroBanner";
-import { CuratedEssentials } from "@/features/storefront/CuratedEssentials";
-import { NewsletterSection } from "@/features/storefront/NewsletterSection";
-import { ArrowRight, Star, Sparkles, Quote, Filter, SlidersHorizontal } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+import { ArrowRight, Sparkles, Clock, ChevronRight, ChevronLeft, ShieldCheck, Truck, RotateCcw, Award } from "lucide-react";
+import { motion } from "framer-motion";
 
 export default function Home() {
-  const [selectedCategory, setSelectedCategory] = useState<string>("ALL");
-  const [activeTabFilter, setActiveTabFilter] = useState<"FEATURED" | "BESTSELLERS" | "NEW" | "OFFERS">("FEATURED");
-
+  // Category Discovery Data
   const categories = [
-    { id: "ALL", label: "ALL ARTIFACTS" },
-    { id: "DECOR", label: "CERAMICS & DECOR" },
-    { id: "FURNITURE", label: "FURNITURE & LOUNGE" },
-    { id: "TECHNOLOGY", label: "AUDIO & TECH" },
-    { id: "TEXTILES", label: "LINENS & TEXTILES" },
-    { id: "LIGHTING", label: "LAMPS & LIGHTING" },
-    { id: "KITCHENWARE", label: "TABLEWARE" },
-  ];
-
-  // Filter logic for products below the hero banners
-  const filteredProducts = MOCK_PRODUCTS.filter((product) => {
-    // Category check
-    if (selectedCategory !== "ALL" && product.category !== selectedCategory) {
-      return false;
-    }
-    // Tab filter check
-    if (activeTabFilter === "BESTSELLERS") return product.isBestseller;
-    if (activeTabFilter === "NEW") return product.isNew;
-    if (activeTabFilter === "OFFERS") return Boolean(product.originalPrice);
-    return true;
-  });
-
-  const testimonials = [
     {
-      id: 1,
-      quote: "LUXE delivers an unmatched level of refinement. Every piece feels like a private gallery acquisition.",
-      author: "Victoria Sterling",
-      title: "Interior Architect, London",
-      avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=200&auto=format&fit=crop",
-      rating: 5,
+      name: "Ceramics & Decor",
+      count: "48 Products",
+      image: "https://images.unsplash.com/photo-1578749556568-bc2c40e68b61?q=80&w=600&auto=format&fit=crop",
+      href: "/shop?category=DECOR",
     },
     {
-      id: 2,
-      quote: "Uncompromising materials and packaging. The attention to detail makes every daily ritual feel extraordinary.",
-      author: "Julian Vance",
-      title: "Creative Director, New York",
-      avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=200&auto=format&fit=crop",
-      rating: 5,
+      name: "Furniture & Lounge",
+      count: "32 Products",
+      image: "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?q=80&w=600&auto=format&fit=crop",
+      href: "/shop?category=FURNITURE",
     },
     {
-      id: 3,
-      quote: "From ordering to unboxing, the Maison experience is seamless. Worth every investment.",
-      author: "Camille Dupont",
-      title: "Fashion Editor, Paris",
-      avatar: "https://images.unsplash.com/photo-1517841905240-472988babdf9?q=80&w=200&auto=format&fit=crop",
-      rating: 5,
+      name: "Audio & Technology",
+      count: "54 Products",
+      image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?q=80&w=600&auto=format&fit=crop",
+      href: "/shop?category=TECHNOLOGY",
+    },
+    {
+      name: "Textiles & Linens",
+      count: "29 Products",
+      image: "https://images.unsplash.com/photo-1584100936595-c0654b55a2e2?q=80&w=600&auto=format&fit=crop",
+      href: "/shop?category=TEXTILES",
+    },
+    {
+      name: "Lamps & Lighting",
+      count: "18 Products",
+      image: "https://images.unsplash.com/photo-1507473885765-e6ed057f782c?q=80&w=600&auto=format&fit=crop",
+      href: "/shop?category=LIGHTING",
+    },
+    {
+      name: "Tableware & Kitchen",
+      count: "36 Products",
+      image: "https://images.unsplash.com/photo-1517256064527-09c73fc73e38?q=80&w=600&auto=format&fit=crop",
+      href: "/shop?category=KITCHENWARE",
     },
   ];
+
+  // Deal Countdown Timer (04:32:18)
+  const [timeLeft, setTimeLeft] = useState({ hours: 4, minutes: 32, seconds: 18 });
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setTimeLeft((prev) => {
+        if (prev.seconds > 0) return { ...prev, seconds: prev.seconds - 1 };
+        if (prev.minutes > 0) return { ...prev, minutes: 59, seconds: 59 };
+        if (prev.hours > 0) return { hours: prev.hours - 1, minutes: 59, seconds: 59 };
+        return prev;
+      });
+    }, 1000);
+    return () => clearInterval(timer);
+  }, []);
+
+  const featuredProducts = MOCK_PRODUCTS.slice(0, 8);
+  const bestSellerProducts = MOCK_PRODUCTS.filter((p) => p.isBestseller || p.rating >= 4.8);
+  const todayDeals = MOCK_PRODUCTS.filter((p) => p.originalPrice);
 
   return (
-    <div className="min-h-screen bg-[#FAF7F2] flex flex-col font-sans text-[#151515]">
+    <div className="min-h-screen bg-[#FAF7F2] flex flex-col font-sans text-[#181512]">
       <Navbar />
+      <MobileNav />
 
-      <main className="flex-grow space-y-20 pb-16">
-        {/* Section 1: Hero Banner Carousel */}
+      <main className="flex-grow space-y-16 pb-16">
+        {/* Section 1 — Hero */}
         <HeroBanner />
 
-        {/* Section 2: Interactive Category Bar & Multiple Products Grid */}
-        <section className="max-w-7xl mx-auto px-6 md:px-12 space-y-10 pt-4">
-          
-          {/* Header & Section Title */}
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-[#E8DDD2] pb-6">
-            <div className="space-y-2">
-              <div className="inline-flex items-center space-x-2 text-[10px] font-bold tracking-[0.25em] uppercase text-[#A56A3A]">
-                <Sparkles className="w-3.5 h-3.5 text-[#A56A3A]" />
-                <span>CURATED REPERTOIRE</span>
-              </div>
-              <h2 className="font-serif-luxury text-3xl md:text-5xl font-normal tracking-tight text-[#151515]">
-                Explore Luxury Artifacts
+        {/* Section 2 — Shop by Category Discovery */}
+        <section className="max-w-7xl mx-auto px-6 md:px-12 space-y-8">
+          <div className="flex items-center justify-between border-b border-[#E6DED5] pb-4">
+            <div>
+              <h2 className="font-display text-2xl md:text-3xl font-bold text-[#181512]">
+                Shop by Category
               </h2>
+              <p className="text-xs text-[#6F6861] mt-1">Explore our structured product repertoire.</p>
             </div>
-            <p className="text-xs text-[#5F5F5F] max-w-md leading-relaxed font-normal tracking-wide">
-              Handpicked lifestyle objects, tactile ceramics, studio audio, and furniture engineered with sustainable precision.
-            </p>
-          </div>
-
-          {/* Interactive Category Pill Scroll Bar */}
-          <div className="flex items-center space-x-3 overflow-x-auto pb-2 scrollbar-none">
-            {categories.map((cat) => (
-              <button
-                key={cat.id}
-                onClick={() => setSelectedCategory(cat.id)}
-                className={`px-5 py-3 rounded-full text-xs font-bold tracking-wider uppercase transition-all flex-shrink-0 ${
-                  selectedCategory === cat.id
-                    ? "bg-[#151515] text-[#FAF7F2] shadow-lg scale-105"
-                    : "bg-white border border-[#E8DDD2] text-[#5F5F5F] hover:bg-[#F5EFE6] hover:text-[#151515]"
-                }`}
-              >
-                {cat.label}
-              </button>
-            ))}
-          </div>
-
-          {/* Tab Sub-Filter Controls (Featured, Bestsellers, New, Offers) */}
-          <div className="flex items-center justify-between bg-white p-2 rounded-2xl border border-[#E8DDD2] shadow-sm">
-            <div className="flex items-center space-x-2">
-              {(["FEATURED", "BESTSELLERS", "NEW", "OFFERS"] as const).map((tab) => (
-                <button
-                  key={tab}
-                  onClick={() => setActiveTabFilter(tab)}
-                  className={`px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition-all ${
-                    activeTabFilter === tab
-                      ? "bg-[#A56A3A] text-white shadow-sm"
-                      : "text-[#5F5F5F] hover:text-[#151515]"
-                  }`}
-                >
-                  {tab === "NEW" ? "NEW ARRIVALS" : tab === "OFFERS" ? "SPECIAL OFFERS" : tab}
-                </button>
-              ))}
-            </div>
-
-            <span className="text-xs text-[#5F5F5F] font-medium hidden sm:inline px-4">
-              Showing <strong>{filteredProducts.length}</strong> items
-            </span>
-          </div>
-
-          {/* Multiple Products Display Grid */}
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={`${selectedCategory}-${activeTabFilter}`}
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -15 }}
-              transition={{ duration: 0.4 }}
-              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8"
-            >
-              {filteredProducts.map((product) => (
-                <ProductCard key={product.id} product={product} />
-              ))}
-            </motion.div>
-          </AnimatePresence>
-
-          {filteredProducts.length === 0 && (
-            <div className="text-center py-16 bg-white rounded-3xl border border-[#E8DDD2] space-y-3">
-              <p className="font-serif-luxury text-2xl text-[#151515]">
-                No artifacts match your selected filter.
-              </p>
-              <button
-                onClick={() => {
-                  setSelectedCategory("ALL");
-                  setActiveTabFilter("FEATURED");
-                }}
-                className="bg-[#A56A3A] text-white px-6 py-2.5 rounded-xl text-xs font-bold uppercase tracking-widest"
-              >
-                Reset All Filters
-              </button>
-            </div>
-          )}
-
-          {/* View Full Catalog Link */}
-          <div className="text-center pt-4">
-            <Link href="/shop">
-              <button className="bg-white border border-[#E8DDD2] hover:bg-[#F5EFE6] text-[#151515] px-10 py-4 rounded-2xl text-xs font-bold uppercase tracking-widest transition-all duration-300 shadow-sm inline-flex items-center space-x-3 group">
-                <span>View Full Catalog</span>
-                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform text-[#A56A3A]" />
-              </button>
+            <Link href="/shop" className="text-xs font-bold text-[#A56B4F] hover:underline flex items-center space-x-1">
+              <span>View All Categories</span>
+              <ArrowRight className="w-3.5 h-3.5" />
             </Link>
           </div>
 
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+            {categories.map((cat, idx) => (
+              <Link key={idx} href={cat.href} className="group block">
+                <div className="bg-white rounded-2xl p-3 border border-[#E6DED5] shadow-subtle hover:shadow-card hover:border-[#A56B4F] transition-all space-y-3">
+                  <div className="aspect-square rounded-xl overflow-hidden bg-[#F2ECE4]">
+                    <img src={cat.image} alt={cat.name} className="w-full h-full object-cover img-hover-zoom" />
+                  </div>
+                  <div>
+                    <h4 className="text-xs font-bold text-[#181512] group-hover:text-[#A56B4F] transition-colors leading-tight">
+                      {cat.name}
+                    </h4>
+                    <div className="flex items-center justify-between mt-1 text-[11px] text-[#6F6861]">
+                      <span>{cat.count}</span>
+                      <span className="text-[#A56B4F] font-bold group-hover:translate-x-1 transition-transform">→</span>
+                    </div>
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
         </section>
 
-        {/* Section 3: Curated Essentials Bento Grid */}
-        <CuratedEssentials />
-
-        {/* Section 4: Brand Story / Manifesto */}
-        <section className="max-w-7xl mx-auto px-6 md:px-12 py-6">
-          <div className="bg-white rounded-[40px] p-8 md:p-16 border border-[#E8DDD2] shadow-level-2 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center relative overflow-hidden">
-            <div className="lg:col-span-6 relative">
-              <div className="aspect-[4/5] rounded-[32px] overflow-hidden shadow-level-2 border border-[#E8DDD2]">
-                <img
-                  src="https://images.unsplash.com/photo-1513519245088-0e12902e5a38?q=80&w=1000&auto=format&fit=crop"
-                  alt="Minimalist design aesthetic"
-                  className="w-full h-full object-cover"
-                />
+        {/* Section 3 — Promotional Campaign Band */}
+        <section className="max-w-7xl mx-auto px-6 md:px-12">
+          <div className="bg-[#171310] text-white rounded-3xl p-8 md:p-14 relative overflow-hidden shadow-card border border-white/10 grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
+            <div className="md:col-span-8 space-y-4 relative z-10">
+              <span className="text-[10px] font-bold uppercase tracking-widest text-[#A56B4F] bg-white/10 px-3 py-1 rounded-md border border-white/10 inline-block">
+                MID-SEASON EDIT
+              </span>
+              <h2 className="font-display text-3xl md:text-5xl font-bold text-white leading-tight">
+                Up to 40% Off Selected Artifacts
+              </h2>
+              <p className="text-xs md:text-sm text-[#E6DED5]/80 max-w-lg leading-relaxed">
+                Discover limited-quantity promotions on studio acoustics, handcrafted tableware, and linen home furnishings.
+              </p>
+              <div className="pt-2">
+                <Link href="/shop?sort=deals">
+                  <button className="bg-[#A56B4F] hover:bg-[#8E5840] text-white px-8 py-3.5 rounded-xl text-xs font-bold uppercase tracking-widest transition-colors shadow-terracotta inline-flex items-center space-x-2">
+                    <span>Shop Deals</span>
+                    <ArrowRight className="w-4 h-4" />
+                  </button>
+                </Link>
               </div>
-              <div className="absolute -bottom-6 -right-6 hidden sm:block bg-[#151515] text-white p-6 rounded-2xl max-w-xs shadow-2xl border border-white/10">
-                <span className="text-[10px] font-bold tracking-widest uppercase text-[#D49B53] block mb-1">
-                  SUSTAINABLE PHILOSOPHY
+            </div>
+            <div className="md:col-span-4 relative hidden md:block">
+              <img
+                src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?q=80&w=600&auto=format&fit=crop"
+                alt="Mid-season promo"
+                className="rounded-2xl border border-white/20 shadow-2xl object-cover aspect-square"
+              />
+            </div>
+          </div>
+        </section>
+
+        {/* Section 4 — Featured Products Grid */}
+        <section className="max-w-7xl mx-auto px-6 md:px-12 space-y-8">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between border-b border-[#E6DED5] pb-4 gap-4">
+            <div>
+              <h2 className="font-display text-2xl md:text-3xl font-bold text-[#181512]">
+                Featured for You
+              </h2>
+              <p className="text-xs text-[#6F6861] mt-1">Curated picks worth discovering.</p>
+            </div>
+            <Link href="/shop" className="text-xs font-bold text-[#A56B4F] hover:underline flex items-center space-x-1">
+              <span>View Entire Catalog</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            {featuredProducts.map((product) => (
+              <ProductCard key={product.id} product={product} />
+            ))}
+          </div>
+        </section>
+
+        {/* Section 5 — Today's Deals Section with Live Countdown */}
+        <section className="max-w-7xl mx-auto px-6 md:px-12 space-y-8">
+          <div className="bg-white rounded-3xl p-6 md:p-8 border border-[#E6DED5] shadow-card space-y-6">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#E6DED5] pb-4">
+              <div className="flex items-center space-x-3">
+                <span className="p-2 bg-[#B74747] text-white rounded-xl">
+                  <Clock className="w-5 h-5" />
                 </span>
-                <p className="text-xs text-white/80 leading-relaxed">
-                  100% zero-waste sourcing & ethical artisanal craftsmanship.
-                </p>
+                <div>
+                  <h3 className="text-lg font-bold text-[#181512]">Today's Deals</h3>
+                  <p className="text-xs text-[#6F6861]">Limited-time pricing updated daily.</p>
+                </div>
+              </div>
+
+              {/* Countdown Stepper */}
+              <div className="flex items-center space-x-2 text-xs font-bold text-[#171310] bg-[#FAF7F2] px-4 py-2 rounded-xl border border-[#E6DED5]">
+                <span className="text-[#6F6861] text-[10px] uppercase font-bold mr-1">Ends in</span>
+                <span className="bg-[#171310] text-white px-2 py-1 rounded-md">{String(timeLeft.hours).padStart(2, "0")}</span>
+                <span>:</span>
+                <span className="bg-[#171310] text-white px-2 py-1 rounded-md">{String(timeLeft.minutes).padStart(2, "0")}</span>
+                <span>:</span>
+                <span className="bg-[#B74747] text-white px-2 py-1 rounded-md">{String(timeLeft.seconds).padStart(2, "0")}</span>
               </div>
             </div>
 
-            <div className="lg:col-span-6 space-y-6">
-              <div className="inline-flex items-center space-x-2 text-[10px] font-bold tracking-widest uppercase text-[#A56A3A]">
-                <Sparkles className="w-3.5 h-3.5 text-[#A56A3A]" />
-                <span>OUR MANIFESTO</span>
-              </div>
-              <h2 className="font-serif-luxury text-4xl md:text-5xl font-normal text-[#151515] leading-tight">
-                Designed to Be Inherited, <br />
-                Not Replaced.
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+              {todayDeals.map((product) => (
+                <ProductCard key={product.id} product={product} />
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Section 6 — Best Sellers Horizontal Scroll Carousel */}
+        <section className="max-w-7xl mx-auto px-6 md:px-12 space-y-6">
+          <div className="flex items-center justify-between border-b border-[#E6DED5] pb-4">
+            <div>
+              <h2 className="font-display text-2xl md:text-3xl font-bold text-[#181512]">
+                Best Sellers
               </h2>
-              <p className="text-xs md:text-sm text-[#5F5F5F] leading-relaxed tracking-wide">
-                At LUXE, we believe modern luxury lies in restraint. We purge unnecessary ornamentation to highlight the intrinsic beauty of raw materials — raw terracotta, brass, unbleached linen, and solid ash wood.
+              <p className="text-xs text-[#6F6861] mt-1">Our highest-rated customer favorites.</p>
+            </div>
+            <Link href="/shop?sort=bestsellers" className="text-xs font-bold text-[#A56B4F] hover:underline">
+              View All Best Sellers
+            </Link>
+          </div>
+
+          <div className="flex space-x-6 overflow-x-auto pb-4 no-scrollbar">
+            {bestSellerProducts.map((product) => (
+              <div key={product.id} className="w-64 flex-shrink-0">
+                <ProductCard product={product} />
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* Section 7 — Trust Section */}
+        <section className="max-w-7xl mx-auto px-6 md:px-12">
+          <div className="bg-white rounded-3xl p-8 border border-[#E6DED5] shadow-subtle grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 text-center divide-x-0 sm:divide-x divide-[#E6DED5]">
+            <div className="flex flex-col items-center space-y-2 p-2">
+              <Truck className="w-7 h-7 text-[#A56B4F]" />
+              <h4 className="text-xs font-bold uppercase tracking-wider text-[#181512]">Free Shipping</h4>
+              <p className="text-xs text-[#6F6861]">On eligible orders above ₹999</p>
+            </div>
+
+            <div className="flex flex-col items-center space-y-2 p-2">
+              <ShieldCheck className="w-7 h-7 text-[#347A52]" />
+              <h4 className="text-xs font-bold uppercase tracking-wider text-[#181512]">Secure Payments</h4>
+              <p className="text-xs text-[#6F6861]">100% protected Razorpay checkout</p>
+            </div>
+
+            <div className="flex flex-col items-center space-y-2 p-2">
+              <RotateCcw className="w-7 h-7 text-[#A56B4F]" />
+              <h4 className="text-xs font-bold uppercase tracking-wider text-[#181512]">Easy Returns</h4>
+              <p className="text-xs text-[#6F6861]">Simple 30-day return process</p>
+            </div>
+
+            <div className="flex flex-col items-center space-y-2 p-2">
+              <Award className="w-7 h-7 text-[#A56B4F]" />
+              <h4 className="text-xs font-bold uppercase tracking-wider text-[#181512]">Authentic Products</h4>
+              <p className="text-xs text-[#6F6861]">Quality & provenance guaranteed</p>
+            </div>
+          </div>
+        </section>
+
+        {/* Section 8 — Brand Story / Manifesto */}
+        <section className="max-w-7xl mx-auto px-6 md:px-12">
+          <div className="bg-[#F2ECE4] rounded-3xl p-8 md:p-14 border border-[#E6DED5] grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+            <div className="lg:col-span-6 relative">
+              <div className="aspect-[4/3] rounded-2xl overflow-hidden border border-[#E6DED5] bg-white">
+                <img
+                  src="https://images.unsplash.com/photo-1513519245088-0e12902e5a38?q=80&w=1000&auto=format&fit=crop"
+                  alt="Why Shop With Us"
+                  className="w-full h-full object-cover"
+                />
+              </div>
+            </div>
+
+            <div className="lg:col-span-6 space-y-4">
+              <span className="text-[10px] font-bold uppercase tracking-widest text-[#A56B4F]">
+                WHY SHOP WITH US
+              </span>
+              <h2 className="font-display text-3xl md:text-4xl font-bold text-[#181512]">
+                Thoughtfully selected. <br />
+                Made for everyday life.
+              </h2>
+              <p className="text-xs md:text-sm text-[#6F6861] leading-relaxed">
+                We bring together products chosen for quality, usefulness, and value. Every item in our store passes rigorous standards for durability, aesthetic harmony, and sustainable production.
               </p>
-              <div className="pt-4 border-t border-[#E8DDD2] flex items-center justify-between">
-                <div>
-                  <h4 className="font-serif-luxury text-xl font-bold text-[#A56A3A]">Maison LUXE</h4>
-                  <p className="text-[10px] uppercase tracking-widest text-[#5F5F5F]">Est. 2026 • Paris & New York</p>
-                </div>
-                <Link
-                  href="/shop"
-                  className="bg-[#151515] hover:bg-[#A56A3A] text-white px-6 py-3 rounded-xl text-xs font-bold uppercase tracking-widest transition-colors flex items-center space-x-2 shadow-sm"
-                >
+              <div className="pt-2">
+                <Link href="/shop" className="text-xs font-bold text-[#171310] hover:text-[#A56B4F] uppercase tracking-wider flex items-center space-x-1">
                   <span>Our Story</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
+                  <ArrowRight className="w-4 h-4" />
                 </Link>
               </div>
             </div>
           </div>
         </section>
-
-        {/* Section 5: Editorial Testimonials */}
-        <section className="max-w-7xl mx-auto px-6 md:px-12 space-y-10">
-          <div className="text-center space-y-3 max-w-xl mx-auto">
-            <span className="text-[10px] font-bold tracking-widest uppercase text-[#A56A3A]">
-              CLIENT REFLECTIONS
-            </span>
-            <h2 className="font-serif-luxury text-3xl md:text-4xl font-normal text-[#151515]">
-              Endorsed by Collectors Worldwide
-            </h2>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {testimonials.map((t) => (
-              <motion.div
-                key={t.id}
-                whileHover={{ y: -4 }}
-                className="bg-white rounded-3xl p-8 border border-[#E8DDD2] shadow-level-1 flex flex-col justify-between space-y-6 relative"
-              >
-                <Quote className="w-8 h-8 text-[#D49B53]/40 absolute top-6 right-6" />
-
-                <div className="space-y-4">
-                  <div className="flex items-center space-x-1">
-                    {[...Array(t.rating)].map((_, i) => (
-                      <Star key={i} className="w-3.5 h-3.5 fill-[#A56A3A] text-[#A56A3A]" />
-                    ))}
-                  </div>
-                  <p className="font-serif-luxury text-lg text-[#151515] italic leading-relaxed">
-                    "{t.quote}"
-                  </p>
-                </div>
-
-                <div className="flex items-center space-x-4 pt-4 border-t border-[#F5EFE6]">
-                  <img
-                    src={t.avatar}
-                    alt={t.author}
-                    className="w-11 h-11 rounded-full object-cover border border-[#E8DDD2]"
-                  />
-                  <div>
-                    <h4 className="text-xs font-bold text-[#151515]">{t.author}</h4>
-                    <p className="text-[11px] text-[#5F5F5F]">{t.title}</p>
-                  </div>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </section>
-
-        {/* Section 6: Newsletter Callout */}
-        <NewsletterSection />
       </main>
 
       <Footer />

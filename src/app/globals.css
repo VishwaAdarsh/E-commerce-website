@@ -1,12 +1,12 @@
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,600&family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700;800&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  --background: #14110f;
-  --foreground: #ffffff;
+  --background: #FAF7F2;
+  --foreground: #181512;
 }
 
 html {
@@ -16,63 +16,58 @@ html {
 body {
   color: var(--foreground);
   background-color: var(--background);
-  font-family: 'Inter', sans-serif;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
 }
 
-/* Luxury Serif & Display Fonts */
-.font-serif-luxury {
-  font-family: 'Cormorant Garamond', Georgia, serif;
+/* Restrained Hover Zoom */
+.img-hover-zoom {
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* Gold Gradient text for "DESIGN." from Image */
-.text-gold-gradient {
-  background: linear-gradient(135deg, #F0C480 0%, #D49B53 50%, #9E6C30 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+.img-hover-zoom:hover {
+  transform: scale(1.03);
 }
 
-/* Primary Button Gold Gradient from Image */
-.bg-gold-btn {
-  background: linear-gradient(135deg, #D49B53 0%, #B87E39 100%);
+/* Glassmorphism Header & Drawers */
+.glass-header {
+  background: rgba(250, 247, 242, 0.92);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
 }
 
-.bg-gold-btn:hover {
-  background: linear-gradient(135deg, #E5AA5D 0%, #C48A43 100%);
-  box-shadow: 0 10px 25px -5px rgba(212, 155, 83, 0.4);
+.glass-dropdown {
+  background: rgba(255, 255, 255, 0.98);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
 }
 
-/* Dark Luxury Glassmorphism Navbar & Card */
-.glass-nav-dark {
-  background: rgba(20, 17, 15, 0.9);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-}
-
-.glass-card-dark {
-  background: rgba(35, 28, 24, 0.75);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(212, 155, 83, 0.25);
-}
-
-/* Custom Scrollbar */
+/* Custom Commerce Scrollbar */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #14110f;
+  background: #F2ECE4;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #382e29;
+  background: #D8CEC4;
   border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #d49b53;
+  background: #A56B4F;
+}
+
+/* Hide Scrollbar for Horizontal Chips */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
