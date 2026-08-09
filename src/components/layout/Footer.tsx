@@ -18,8 +18,8 @@ export default function Footer() {
           <div className="flex items-center space-x-3">
             <RotateCcw className="w-5 h-5 text-[#A56B4F] flex-shrink-0" />
             <div>
-              <h4 className="font-bold text-white uppercase tracking-wider">30-Day Returns</h4>
-              <p className="text-[11px] text-[#E6DED5]/70">Simple return policy</p>
+              <h4 className="font-bold text-white uppercase tracking-wider">Easy Returns</h4>
+              <p className="text-[11px] text-[#E6DED5]/70">Simple policy guidelines</p>
             </div>
           </div>
 
@@ -66,26 +66,28 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Column 3 — Customer Care */}
+          {/* Column 3 — Customer Care (All Live Links) */}
           <div className="md:col-span-3 space-y-3">
             <h4 className="text-xs font-bold uppercase tracking-widest text-[#A56B4F]">Customer Care</h4>
             <ul className="space-y-2 text-xs text-[#E6DED5]/70">
-              <li><Link href="#" className="hover:text-white transition-colors">Contact Support</Link></li>
-              <li><Link href="/checkout" className="hover:text-white transition-colors">Track Order</Link></li>
-              <li><Link href="#" className="hover:text-white transition-colors">Shipping Policy</Link></li>
-              <li><Link href="#" className="hover:text-white transition-colors">Returns & Exchanges</Link></li>
-              <li><Link href="#" className="hover:text-white transition-colors">Refund Policy</Link></li>
+              <li><Link href="/support" className="hover:text-white transition-colors">Help Center</Link></li>
+              <li><Link href="/support/contact" className="hover:text-white transition-colors">Contact Support</Link></li>
+              <li><Link href="/support/tickets" className="hover:text-white transition-colors">Track Ticket Status</Link></li>
+              <li><Link href="/policies/returns" className="hover:text-white transition-colors">Return Policy</Link></li>
+              <li><Link href="/policies/refunds" className="hover:text-white transition-colors">Refund Policy</Link></li>
+              <li><Link href="/policies/cancellations" className="hover:text-white transition-colors">Cancellation Policy</Link></li>
+              <li><Link href="/policies/shipping" className="hover:text-white transition-colors">Shipping Policy</Link></li>
+              <li><Link href="/support/faq" className="hover:text-white transition-colors">Frequently Asked Questions</Link></li>
             </ul>
           </div>
 
-          {/* Column 4 — Account */}
+          {/* Column 4 — Account & Legal */}
           <div className="md:col-span-3 space-y-3">
-            <h4 className="text-xs font-bold uppercase tracking-widest text-[#A56B4F]">My Account</h4>
+            <h4 className="text-xs font-bold uppercase tracking-widest text-[#A56B4F]">Legal & Account</h4>
             <ul className="space-y-2 text-xs text-[#E6DED5]/70">
               <li><Link href="/dashboard" className="hover:text-white transition-colors">My Account</Link></li>
-              <li><Link href="/dashboard" className="hover:text-white transition-colors">Order History</Link></li>
-              <li><Link href="/checkout" className="hover:text-white transition-colors">Saved Wishlist</Link></li>
-              <li><Link href="/dashboard" className="hover:text-white transition-colors">Saved Addresses</Link></li>
+              <li><Link href="/policies/terms" className="hover:text-white transition-colors">Terms & Conditions</Link></li>
+              <li><Link href="/policies/privacy" className="hover:text-white transition-colors">Privacy Policy</Link></li>
             </ul>
           </div>
         </div>
@@ -94,11 +96,11 @@ export default function Footer() {
         <div className="flex flex-col md:flex-row items-center justify-between text-xs text-[#E6DED5]/50 space-y-4 md:space-y-0">
           <p>© 2026 LuxeCommerce. All rights reserved.</p>
           <div className="flex items-center space-x-4">
-            <Link href="#" className="hover:text-white transition-colors">Privacy Policy</Link>
+            <Link href="/policies/privacy" className="hover:text-white transition-colors">Privacy Policy</Link>
             <span>•</span>
-            <Link href="#" className="hover:text-white transition-colors">Terms of Service</Link>
+            <Link href="/policies/terms" className="hover:text-white transition-colors">Terms of Service</Link>
             <span>•</span>
-            <Link href="#" className="hover:text-white transition-colors">Shipping Policy</Link>
+            <Link href="/policies/shipping" className="hover:text-white transition-colors">Shipping Policy</Link>
           </div>
         </div>
       </div>
