@@ -1,6 +1,6 @@
 export type ProductStatus = 'ACTIVE' | 'LOW STOCK' | 'DRAFT' | 'ARCHIVED';
 
-export type OrderStatus = 'Pending' | 'Processing' | 'Shipped' | 'Delivered';
+export type OrderStatus = 'Pending' | 'Confirmed' | 'Processing' | 'Shipped' | 'Out for Delivery' | 'Delivered' | 'Cancelled' | 'Returned' | 'Refunded';
 
 export interface Category {
   id: string;

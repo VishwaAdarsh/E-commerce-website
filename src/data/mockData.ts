@@ -25,7 +25,7 @@ export interface Order {
   avatarInitials: string;
   date: string;
   amount: number;
-  status: 'Pending' | 'Processing' | 'Shipped' | 'Delivered';
+  status: 'Pending' | 'Confirmed' | 'Processing' | 'Shipped' | 'Out for Delivery' | 'Delivered' | 'Cancelled' | 'Returned' | 'Refunded';
   items: {
     productName: string;
     quantity: number;
