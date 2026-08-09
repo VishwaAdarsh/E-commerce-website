@@ -44,33 +44,36 @@ export interface CartItem {
 export const MOCK_PRODUCTS: Product[] = [
   {
     id: "prod-1",
-    name: "Onyx Ceramic Mug",
-    sku: "CM-ONX-01",
-    category: "KITCHENWARE",
-    price: 34.00,
+    name: "Artisanal Terracotta Vessel",
+    sku: "DC-VSS-01",
+    category: "DECOR",
+    price: 180.00,
+    originalPrice: 220.00,
     stock: 85,
     status: "ACTIVE",
-    rating: 4.8,
+    rating: 4.9,
     isNew: true,
-    image: "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?q=80&w=800&auto=format&fit=crop",
-    description: "Handcrafted matte onyx ceramic mug designed with ergonomic balance and subtle tactile glaze."
+    isBestseller: true,
+    image: "https://images.unsplash.com/photo-1578749556568-bc2c40e68b61?q=80&w=800&auto=format&fit=crop",
+    description: "Handcrafted matte terracotta ceramic vessel designed with ergonomic balance and warm organic tone."
   },
   {
     id: "prod-2",
-    name: "Aluminum Type K2",
+    name: "Aluminum Type K2 Keyboard",
     sku: "KB-OBS-01-L",
     category: "TECHNOLOGY",
     price: 189.00,
+    originalPrice: 210.00,
     stock: 142,
     status: "ACTIVE",
-    rating: 4.6,
+    rating: 4.8,
     isBestseller: true,
     image: "https://images.unsplash.com/photo-1587829741301-dc798b83add3?q=80&w=800&auto=format&fit=crop",
-    description: "Precision CNC milled aluminum mechanical keyboard featuring hot-swappable switches and warm backlit lighting."
+    description: "Precision CNC milled aluminum mechanical keyboard featuring hot-swappable switches and warm backlit illumination."
   },
   {
     id: "prod-3",
-    name: "Alpaca Wool Throw",
+    name: "Peruvian Alpaca Wool Throw",
     sku: "TX-ALP-04",
     category: "TEXTILES",
     price: 115.00,
@@ -78,12 +81,13 @@ export const MOCK_PRODUCTS: Product[] = [
     stock: 45,
     status: "ACTIVE",
     rating: 5.0,
+    isNew: true,
     image: "https://images.unsplash.com/photo-1584100936595-c0654b55a2e2?q=80&w=800&auto=format&fit=crop",
     description: "100% sustainable Peruvian alpaca wool blanket with naturally insulating weave and raw fringed edge."
   },
   {
     id: "prod-4",
-    name: "Brass Hourglass",
+    name: "Sculptural Brass Hourglass",
     sku: "DC-HRS-02",
     category: "DECOR",
     price: 65.00,
@@ -91,59 +95,91 @@ export const MOCK_PRODUCTS: Product[] = [
     status: "ACTIVE",
     rating: 4.7,
     image: "https://images.unsplash.com/photo-1509198397868-475647b2a1e5?q=80&w=800&auto=format&fit=crop",
-    description: "Solid brushed brass frame supporting hand-blown glass containing fine neutral quartz sand for a 30-minute timer."
+    description: "Solid brushed brass frame supporting hand-blown glass containing fine neutral quartz sand."
   },
   {
     id: "prod-5",
-    name: "Obsidian Pour-Over Setup",
+    name: "Obsidian Ceramic Pour-Over",
     sku: "KT-PO-09",
     category: "KITCHENWARE",
     price: 145.00,
+    originalPrice: 165.00,
     stock: 19,
     status: "ACTIVE",
     rating: 4.9,
+    isBestseller: true,
     image: "https://images.unsplash.com/photo-1517256064527-09c73fc73e38?q=80&w=800&auto=format&fit=crop",
     description: "Minimalist ceramic drip coffee maker with heat-resistant borosilicate glass server and bamboo base."
   },
   {
     id: "prod-6",
-    name: "Titanium Field Watch",
+    name: "Titanium Field Watch No. 01",
     sku: "AC-WTCH-01",
     category: "ACCESSORIES",
     price: 450.00,
     stock: 8,
     status: "LOW STOCK",
     rating: 4.9,
+    isNew: true,
     image: "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?q=80&w=800&auto=format&fit=crop",
-    description: "Grade 5 titanium military spec field watch with sapphire crystal glass and vegetable-tanned Italian leather band."
+    description: "Grade 5 titanium military spec field watch with sapphire crystal glass and vegetable-tanned Italian leather strap."
   },
   {
     id: "prod-7",
-    name: "Alloy Hub 7-in-1",
-    sku: "AC-HUB-07-S",
-    category: "ACCESSORIES",
-    price: 59.99,
-    stock: 12,
-    status: "LOW STOCK",
-    rating: 4.4,
-    image: "https://images.unsplash.com/photo-1616440347437-b1c73416efc2?q=80&w=800&auto=format&fit=crop",
-    description: "Anodized aluminum multiport USB-C hub supporting 4K HDMI, 100W Power Delivery, and dual high-speed SD card slots."
+    name: "Minimalist Lounge Chair",
+    sku: "FN-LNG-07",
+    category: "FURNITURE",
+    price: 890.00,
+    originalPrice: 1050.00,
+    stock: 14,
+    status: "ACTIVE",
+    rating: 4.9,
+    isBestseller: true,
+    image: "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?q=80&w=800&auto=format&fit=crop",
+    description: "Solid ash wood armless lounge chair upholstered in tactile bouclé fabric with ergonomic inclination."
   },
   {
     id: "prod-8",
-    name: "Ergo Desk Mat",
-    sku: "AC-MAT-LG-C",
-    category: "ACCESSORIES",
-    price: 29.00,
-    stock: 0,
-    status: "DRAFT",
-    rating: 4.5,
-    image: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=800&auto=format&fit=crop",
-    description: "Charcoal wool felt desk mat with non-slip organic rubber backing for quiet mouse operation and warmth."
+    name: "Acoustic Over-Ear Headphones",
+    sku: "AU-HDP-02",
+    category: "TECHNOLOGY",
+    price: 320.00,
+    originalPrice: 380.00,
+    stock: 36,
+    status: "ACTIVE",
+    rating: 4.8,
+    isNew: true,
+    image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?q=80&w=800&auto=format&fit=crop",
+    description: "Studio-grade wireless acoustic headphones featuring active noise cancellation and memory foam leather earcups."
   },
   {
     id: "prod-9",
-    name: "Glide Wireless Mouse",
+    name: "Architectural Table Lamp",
+    sku: "LT-TBL-09",
+    category: "LIGHTING",
+    price: 240.00,
+    stock: 22,
+    status: "ACTIVE",
+    rating: 4.7,
+    image: "https://images.unsplash.com/photo-1507473885765-e6ed057f782c?q=80&w=800&auto=format&fit=crop",
+    description: "Dimmable warm LED desk lamp with matte steel arm and weighted circular brass foundation."
+  },
+  {
+    id: "prod-10",
+    name: "Natural Linen Bedding Set",
+    sku: "TX-LNN-12",
+    category: "TEXTILES",
+    price: 260.00,
+    originalPrice: 310.00,
+    stock: 30,
+    status: "ACTIVE",
+    rating: 4.9,
+    image: "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?q=80&w=800&auto=format&fit=crop",
+    description: "Pre-washed French flax linen duvet cover and pillowcase pair with breathable soft organic texture."
+  },
+  {
+    id: "prod-11",
+    name: "Glide Wireless Ergonomic Mouse",
     sku: "MS-GLD-01-W",
     category: "PERIPHERALS",
     price: 85.00,
@@ -151,7 +187,20 @@ export const MOCK_PRODUCTS: Product[] = [
     status: "ACTIVE",
     rating: 4.7,
     image: "https://images.unsplash.com/photo-1615663245857-ac93bb7c39e7?q=80&w=800&auto=format&fit=crop",
-    description: "Sleek ergonomic wireless mouse crafted in matte white shell with whisper-quiet tactile switches."
+    description: "Sleek ergonomic wireless mouse crafted in matte shell with whisper-quiet tactile optical switches."
+  },
+  {
+    id: "prod-12",
+    name: "Raw Terracotta Tableware Bowl",
+    sku: "KT-BWL-03",
+    category: "KITCHENWARE",
+    price: 48.00,
+    stock: 64,
+    status: "ACTIVE",
+    rating: 4.8,
+    isNew: true,
+    image: "https://images.unsplash.com/photo-1610701596007-11502861dcfa?q=80&w=800&auto=format&fit=crop",
+    description: "Hand-turned organic terracotta soup and grain bowl finished with food-safe satin glaze interior."
   }
 ];
 
@@ -166,16 +215,16 @@ export const MOCK_ORDERS: Order[] = [
     status: "Pending",
     items: [
       {
-        productName: "Luxe Mechanical Keyboard",
+        productName: "Aluminum Type K2 Keyboard",
         quantity: 1,
-        price: 240.00,
+        price: 189.00,
         image: "https://images.unsplash.com/photo-1587829741301-dc798b83add3?q=80&w=200&auto=format&fit=crop"
       },
       {
-        productName: "Ergo-X Executive Chair",
+        productName: "Minimalist Lounge Chair",
         quantity: 1,
-        price: 1000.00,
-        image: "https://images.unsplash.com/photo-1580481072645-022f9a6d1209?q=80&w=200&auto=format&fit=crop"
+        price: 890.00,
+        image: "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?q=80&w=200&auto=format&fit=crop"
       }
     ]
   },
@@ -185,128 +234,47 @@ export const MOCK_ORDERS: Order[] = [
     customerEmail: "marcus.j@example.com",
     avatarInitials: "MJ",
     date: "Oct 24, 2023 at 11:15 AM",
-    amount: 850.50,
+    amount: 450.00,
     status: "Processing",
     items: [
       {
-        productName: "Titanium Field Watch",
+        productName: "Titanium Field Watch No. 01",
         quantity: 1,
         price: 450.00,
         image: "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?q=80&w=200&auto=format&fit=crop"
       }
     ]
-  },
-  {
-    id: "#ORD-9930",
-    customerName: "Sarah Chen",
-    customerEmail: "sarah.chen@example.com",
-    avatarInitials: "SC",
-    date: "Oct 23, 2023 at 4:45 PM",
-    amount: 3100.00,
-    status: "Shipped",
-    items: [
-      {
-        productName: "The Minimalist Sofa",
-        quantity: 1,
-        price: 3100.00,
-        image: "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?q=80&w=200&auto=format&fit=crop"
-      }
-    ]
-  },
-  {
-    id: "#ORD-9929",
-    customerName: "Thomas Wright",
-    customerEmail: "twright@example.com",
-    avatarInitials: "TR",
-    date: "Oct 23, 2023 at 9:20 AM",
-    amount: 125.00,
-    status: "Delivered",
-    items: [
-      {
-        productName: "Alpaca Wool Throw",
-        quantity: 1,
-        price: 115.00,
-        image: "https://images.unsplash.com/photo-1584100936595-c0654b55a2e2?q=80&w=200&auto=format&fit=crop"
-      }
-    ]
-  },
-  {
-    id: "#ORD-7352",
-    customerName: "Jane Doe",
-    customerEmail: "jane.doe@example.com",
-    avatarInitials: "JD",
-    date: "Oct 24, 2023",
-    amount: 1299.00,
-    status: "Shipped",
-    items: []
-  },
-  {
-    id: "#ORD-7351",
-    customerName: "Michael Smith",
-    customerEmail: "msmith@example.com",
-    avatarInitials: "MS",
-    date: "Oct 24, 2023",
-    amount: 45.50,
-    status: "Pending",
-    items: []
-  },
-  {
-    id: "#ORD-7350",
-    customerName: "Alice Lee",
-    customerEmail: "alice.l@example.com",
-    avatarInitials: "AL",
-    date: "Oct 23, 2023",
-    amount: 349.99,
-    status: "Delivered",
-    items: []
-  },
-  {
-    id: "#ORD-7349",
-    customerName: "Bruce Wayne",
-    customerEmail: "bruce@wayne-ent.com",
-    avatarInitials: "BW",
-    date: "Oct 23, 2023",
-    amount: 8450.00,
-    status: "Delivered",
-    items: []
   }
 ];
 
 export const MOCK_INVENTORY_ALERTS = [
   {
     id: "alert-1",
-    title: "Pro Mechanical Keyboard",
-    status: "Only 4 left in stock",
+    title: "Titanium Field Watch No. 01",
+    status: "Only 8 left in stock",
     type: "danger",
-    image: "https://images.unsplash.com/photo-1587829741301-dc798b83add3?q=80&w=120&auto=format&fit=crop"
+    image: "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?q=80&w=120&auto=format&fit=crop"
   },
   {
     id: "alert-2",
-    title: "Noise Cancelling Headphones",
-    status: "Out of stock",
-    type: "danger",
-    image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?q=80&w=120&auto=format&fit=crop"
-  },
-  {
-    id: "alert-3",
-    title: "Ergonomic Desk Chair",
-    status: "Low stock (12 remaining)",
+    title: "Obsidian Ceramic Pour-Over",
+    status: "Low stock (19 remaining)",
     type: "warning",
-    image: "https://images.unsplash.com/photo-1580481072645-022f9a6d1209?q=80&w=120&auto=format&fit=crop"
+    image: "https://images.unsplash.com/photo-1517256064527-09c73fc73e38?q=80&w=120&auto=format&fit=crop"
   }
 ];
 
 export const MOCK_CART: CartItem[] = [
   {
     id: "cart-1",
-    product: MOCK_PRODUCTS[4], // Obsidian Pour-Over Setup
-    variant: "MATTE BLACK / STANDARD",
+    product: MOCK_PRODUCTS[0], // Artisanal Terracotta Vessel
+    variant: "TERRACOTTA / STANDARD",
     quantity: 1
   },
   {
     id: "cart-2",
-    product: MOCK_PRODUCTS[5], // Titanium Field Watch
-    variant: "NAVY DIAL / LEATHER STRAP",
+    product: MOCK_PRODUCTS[7], // Acoustic Over-Ear Headphones
+    variant: "MATTE BLACK",
     quantity: 1
   }
 ];
