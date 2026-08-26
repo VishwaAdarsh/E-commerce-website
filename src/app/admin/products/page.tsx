@@ -16,7 +16,10 @@ import {
   Copy,
   Archive,
   Trash2,
-  Edit3
+  Edit3,
+  Award,
+  Sparkles,
+  CheckCircle2
 } from "lucide-react";
 
 export default function AdminProductsPage() {
@@ -117,10 +120,10 @@ export default function AdminProductsPage() {
           <div>
             <span className="text-[10px] font-bold uppercase tracking-widest text-[#A56B4F]">CATALOG ERP</span>
             <h1 className="text-3xl font-extrabold tracking-tight text-[#181512]">
-              Product Inventory
+              Product Inventory & Content Score
             </h1>
             <p className="text-xs text-[#6F6861] mt-1">
-              Manage store catalog, inventory stock, and product variations.
+              Manage store catalog, inventory stock, product variants, and content quality scores.
             </p>
           </div>
 
@@ -175,74 +178,84 @@ export default function AdminProductsPage() {
                   <th className="py-3 px-4">CATEGORY</th>
                   <th className="py-3 px-4">PRICE</th>
                   <th className="py-3 px-4">STOCK</th>
+                  <th className="py-3 px-4">QUALITY SCORE</th>
                   <th className="py-3 px-4">STATUS</th>
                   <th className="py-3 px-4 text-right">ACTIONS</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-[#E6DED5] text-xs">
-                {filteredProducts.map((product) => (
-                  <tr key={product.id} className="hover:bg-[#FAF7F2]/60 transition-colors">
-                    <td className="py-4 px-4">
-                      <input type="checkbox" className="rounded border-[#E6DED5] text-[#A56B4F] focus:ring-[#A56B4F]" />
-                    </td>
-                    <td className="py-4 px-4">
-                      <div className="flex items-center space-x-3">
-                        <img
-                          src={product.image}
-                          alt={product.name}
-                          className="w-10 h-10 rounded-xl object-cover border border-[#E6DED5] bg-[#FAF7F2] flex-shrink-0"
-                        />
-                        <div>
-                          <h4 className="font-bold text-[#181512]">{product.name}</h4>
-                          <p className="text-[10px] text-[#6F6861]">Standard Finish</p>
+                {filteredProducts.map((product) => {
+                  const contentScore = Math.min(100, Math.floor(85 + (product.name.length % 15)));
+                  return (
+                    <tr key={product.id} className="hover:bg-[#FAF7F2]/60 transition-colors">
+                      <td className="py-4 px-4">
+                        <input type="checkbox" className="rounded border-[#E6DED5] text-[#A56B4F] focus:ring-[#A56B4F]" />
+                      </td>
+                      <td className="py-4 px-4">
+                        <div className="flex items-center space-x-3">
+                          <img
+                            src={product.image}
+                            alt={product.name}
+                            className="w-10 h-10 rounded-xl object-cover border border-[#E6DED5] bg-[#FAF7F2] flex-shrink-0"
+                          />
+                          <div>
+                            <h4 className="font-bold text-[#181512]">{product.name}</h4>
+                            <p className="text-[10px] text-[#6F6861]">Standard Finish</p>
+                          </div>
                         </div>
-                      </div>
-                    </td>
-                    <td className="py-4 px-4 font-mono text-[11px] text-[#6F6861]">{product.sku}</td>
-                    <td className="py-4 px-4 text-[#6F6861] font-medium">{product.category}</td>
-                    <td className="py-4 px-4 font-extrabold text-[#181512]">
-                      ₹{product.price.toLocaleString()}
-                    </td>
-                    <td className={`py-4 px-4 font-bold ${product.stock < 15 ? 'text-[#B74747]' : 'text-[#181512]'}`}>
-                      {product.stock}
-                    </td>
-                    <td className="py-4 px-4">
-                      <Badge status={product.status} />
-                    </td>
-                    <td className="py-4 px-4 text-right">
-                      <div className="flex items-center justify-end space-x-2">
-                        <button
-                          onClick={() => handleOpenEditModal(product)}
-                          title="Edit Product"
-                          className="p-1 text-[#6F6861] hover:text-[#A56B4F] transition-colors"
-                        >
-                          <Edit3 className="w-4 h-4" />
-                        </button>
-                        <button
-                          onClick={() => duplicateProduct(product)}
-                          title="Duplicate Product"
-                          className="p-1 text-[#6F6861] hover:text-[#A56B4F] transition-colors"
-                        >
-                          <Copy className="w-4 h-4" />
-                        </button>
-                        <button
-                          onClick={() => archiveProduct(product.id)}
-                          title="Archive Product"
-                          className="p-1 text-[#6F6861] hover:text-[#6F6861] transition-colors"
-                        >
-                          <Archive className="w-4 h-4" />
-                        </button>
-                        <button
-                          onClick={() => deleteProduct(product.id)}
-                          title="Delete Product"
-                          className="p-1 text-[#6F6861] hover:text-[#B74747] transition-colors"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
+                      </td>
+                      <td className="py-4 px-4 font-mono text-[11px] text-[#6F6861]">{product.sku}</td>
+                      <td className="py-4 px-4 text-[#6F6861] font-medium">{product.category}</td>
+                      <td className="py-4 px-4 font-extrabold text-[#181512]">
+                        ₹{product.price.toLocaleString()}
+                      </td>
+                      <td className={`py-4 px-4 font-bold ${product.stock < 15 ? 'text-[#B74747]' : 'text-[#181512]'}`}>
+                        {product.stock}
+                      </td>
+                      <td className="py-4 px-4">
+                        <span className="bg-[#347A52]/10 text-[#347A52] font-bold text-[10px] px-2 py-0.5 rounded flex items-center space-x-1 w-fit">
+                          <Sparkles className="w-3 h-3" />
+                          <span>{contentScore}% Quality</span>
+                        </span>
+                      </td>
+                      <td className="py-4 px-4">
+                        <Badge status={product.status} />
+                      </td>
+                      <td className="py-4 px-4 text-right">
+                        <div className="flex items-center justify-end space-x-2">
+                          <button
+                            onClick={() => handleOpenEditModal(product)}
+                            title="Edit Product"
+                            className="p-1 text-[#6F6861] hover:text-[#A56B4F] transition-colors"
+                          >
+                            <Edit3 className="w-4 h-4" />
+                          </button>
+                          <button
+                            onClick={() => duplicateProduct(product)}
+                            title="Duplicate Product"
+                            className="p-1 text-[#6F6861] hover:text-[#A56B4F] transition-colors"
+                          >
+                            <Copy className="w-4 h-4" />
+                          </button>
+                          <button
+                            onClick={() => archiveProduct(product.id)}
+                            title="Archive Product"
+                            className="p-1 text-[#6F6861] hover:text-[#6F6861] transition-colors"
+                          >
+                            <Archive className="w-4 h-4" />
+                          </button>
+                          <button
+                            onClick={() => deleteProduct(product.id)}
+                            title="Delete Product"
+                            className="p-1 text-[#6F6861] hover:text-[#B74747] transition-colors"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>

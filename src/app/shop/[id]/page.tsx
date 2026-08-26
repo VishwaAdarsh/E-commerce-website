@@ -7,6 +7,8 @@ import { MobileNav } from "@/components/layout/MobileNav";
 import Footer from "@/components/layout/Footer";
 import ProductCard from "@/components/ui/ProductCard";
 import { ProductReviews } from "@/components/ui/ProductReviews";
+import { LightboxModal } from "@/components/ui/LightboxModal";
+import { ProductComparisonModal } from "@/components/ui/ProductComparisonModal";
 import { useProducts } from "@/hooks/useProducts";
 import { useCart } from "@/hooks/useCart";
 import { useWishlist } from "@/hooks/useWishlist";
@@ -32,7 +34,10 @@ import {
   Layers,
   Sparkles,
   Zap,
-  Info
+  Info,
+  Maximize2,
+  Sliders,
+  Check
 } from "lucide-react";
 import Link from "next/link";
 
@@ -50,6 +55,13 @@ export default function ProductDetailPage() {
   const [quantity, setQuantity] = useState(1);
   const [selectedSize, setSelectedSize] = useState("M");
   const [selectedColor, setSelectedColor] = useState("Terracotta Natural");
+
+  // Lightbox Modal State
+  const [isLightboxOpen, setIsLightboxOpen] = useState(false);
+  const [lightboxIndex, setLightboxIndex] = useState(0);
+
+  // Product Comparison Modal State
+  const [isCompareOpen, setIsCompareOpen] = useState(false);
 
   // Gallery Thumbnails & Media Zoom
   const galleryImages = [
@@ -102,9 +114,6 @@ export default function ProductDetailPage() {
     toast("Question submitted! An artisan specialist will respond shortly.", "success");
   };
 
-  // Accordions
-  const [activeAccordion, setActiveAccordion] = useState<"desc" | "specs" | "shipping" | "returns">("desc");
-
   const recommendedProducts = products.filter((p) => p.id !== product.id).slice(0, 4);
   const isStarred = isInWishlist(product.id);
 
@@ -113,20 +122,30 @@ export default function ProductDetailPage() {
     : 0;
 
   return (
-    <div className="min-h-screen bg-[#FAF7F2] flex flex-col font-sans text-[#181512]">
+    <div className="min-h-screen bg-[#FAF7F2] flex flex-col font-sans text-[#181512] pb-20 md:pb-0">
       <Navbar />
       <MobileNav />
 
       <main className="flex-grow max-w-7xl mx-auto px-6 md:px-12 py-8 w-full space-y-16">
         {/* Breadcrumbs */}
-        <div className="text-xs text-[#6F6861] flex items-center space-x-2 border-b border-[#E6DED5] pb-3 uppercase tracking-wider font-semibold">
-          <Link href="/" className="hover:text-[#A56B4F]">Home</Link>
-          <span>/</span>
-          <Link href="/shop" className="hover:text-[#A56B4F]">Catalog</Link>
-          <span>/</span>
-          <span className="hover:text-[#A56B4F]">{product.category}</span>
-          <span>/</span>
-          <span className="text-[#181512] font-bold">{product.name}</span>
+        <div className="text-xs text-[#6F6861] flex items-center justify-between border-b border-[#E6DED5] pb-3 uppercase tracking-wider font-semibold">
+          <div className="flex items-center space-x-2">
+            <Link href="/" className="hover:text-[#A56B4F]">Home</Link>
+            <span>/</span>
+            <Link href="/shop" className="hover:text-[#A56B4F]">Catalog</Link>
+            <span>/</span>
+            <span className="hover:text-[#A56B4F]">{product.category}</span>
+            <span>/</span>
+            <span className="text-[#181512] font-bold">{product.name}</span>
+          </div>
+
+          <button
+            onClick={() => setIsCompareOpen(true)}
+            className="flex items-center space-x-1.5 text-xs font-bold text-[#A56B4F] hover:underline"
+          >
+            <Sliders className="w-3.5 h-3.5" />
+            <span>Compare Product</span>
+          </button>
         </div>
 
         {/* Product PDP Layout */}
@@ -134,15 +153,29 @@ export default function ProductDetailPage() {
           
           {/* Left Column — Gallery */}
           <div className="lg:col-span-7 space-y-4">
-            <div className="relative aspect-square bg-white rounded-3xl overflow-hidden border border-[#E6DED5] shadow-card group">
+            <div
+              onClick={() => {
+                setLightboxIndex(galleryImages.indexOf(selectedImage));
+                setIsLightboxOpen(true);
+              }}
+              className="relative aspect-square bg-white rounded-3xl overflow-hidden border border-[#E6DED5] shadow-card group cursor-zoom-in"
+            >
               <img
                 src={selectedImage || product.image}
                 alt={product.name}
                 className="w-full h-full object-cover img-hover-zoom"
               />
 
+              <div className="absolute bottom-4 left-4 bg-black/60 text-white text-[10px] font-bold px-3 py-1 rounded-full backdrop-blur-md flex items-center space-x-1">
+                <Maximize2 className="w-3 h-3" />
+                <span>Click to Fullscreen Lightbox</span>
+              </div>
+
               <button
-                onClick={() => addToWishlist(product)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  addToWishlist(product);
+                }}
                 className={`absolute top-4 right-4 p-3 rounded-full backdrop-blur-md shadow-subtle transition-all ${
                   isStarred
                     ? "bg-[#A56B4F] text-white"
@@ -195,6 +228,29 @@ export default function ProductDetailPage() {
                 </div>
                 <span className="font-bold text-[#181512]">{product.rating}</span>
                 <a href="#reviews-section" className="text-[#6F6861] hover:underline">(1,248 Verified Reviews)</a>
+              </div>
+            </div>
+
+            {/* "WHY YOU'LL LOVE IT" HIGHLIGHTS BOX */}
+            <div className="p-4 bg-[#FAF7F2] rounded-2xl border border-[#E6DED5] space-y-2">
+              <span className="text-[10px] font-bold uppercase tracking-widest text-[#A56B4F] block">WHY YOU'LL LOVE IT</span>
+              <div className="grid grid-cols-2 gap-2 text-xs text-[#181512]">
+                <span className="flex items-center space-x-1.5 font-semibold">
+                  <Check className="w-3.5 h-3.5 text-[#347A52]" />
+                  <span>Handcrafted Finish</span>
+                </span>
+                <span className="flex items-center space-x-1.5 font-semibold">
+                  <Check className="w-3.5 h-3.5 text-[#347A52]" />
+                  <span>Durable Terracotta</span>
+                </span>
+                <span className="flex items-center space-x-1.5 font-semibold">
+                  <Check className="w-3.5 h-3.5 text-[#347A52]" />
+                  <span>Sustainable Materials</span>
+                </span>
+                <span className="flex items-center space-x-1.5 font-semibold">
+                  <Check className="w-3.5 h-3.5 text-[#347A52]" />
+                  <span>Designed for Everyday</span>
+                </span>
               </div>
             </div>
 
@@ -341,6 +397,20 @@ export default function ProductDetailPage() {
           </div>
         </div>
 
+        {/* VISUAL EDITORIAL PRODUCT STORY CARD */}
+        <section className="bg-white p-8 rounded-3xl border border-[#E6DED5] shadow-card grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+          <div className="space-y-4">
+            <span className="text-[10px] font-bold uppercase tracking-widest text-[#A56B4F]">EDITORIAL CRAFT STORY</span>
+            <h2 className="font-display text-2xl md:text-3xl font-bold text-[#181512]">Artisanal Form & Warm Terracotta Texture</h2>
+            <p className="text-xs text-[#6F6861] leading-relaxed">
+              Every piece in the LUXE Terracotta Collection is shaped by hand using sustainably harvested natural clays. Fired in traditional wood kilns to achieve a subtle, textured satin patina that elevates contemporary living spaces.
+            </p>
+          </div>
+          <div className="aspect-video rounded-2xl overflow-hidden border border-[#E6DED5] shadow-subtle">
+            <img src="https://images.unsplash.com/photo-1578749556568-bc2c40e68b61?q=80&w=800&auto=format&fit=crop" alt="Craft Story" className="w-full h-full object-cover" />
+          </div>
+        </section>
+
         {/* Structured Specifications Table */}
         {specs && (
           <section className="bg-white p-8 rounded-3xl border border-[#E6DED5] shadow-card space-y-6">
@@ -447,6 +517,44 @@ export default function ProductDetailPage() {
           </div>
         </section>
       </main>
+
+      {/* STICKY MOBILE PURCHASE BAR */}
+      <div className="fixed bottom-0 inset-x-0 bg-white/95 backdrop-blur-md border-t border-[#E6DED5] p-3 z-40 md:hidden flex items-center justify-between gap-3 shadow-card">
+        <div>
+          <span className="font-extrabold text-[#171310] text-base block">₹{(product.price * quantity).toLocaleString()}</span>
+          <span className="text-[10px] text-[#347A52] font-bold">In Stock</span>
+        </div>
+        <div className="flex items-center space-x-2 flex-grow max-w-[220px]">
+          <button
+            onClick={() => addToCart(product, selectedSize, quantity)}
+            className="flex-grow bg-[#171310] text-white py-2.5 px-3 rounded-xl text-xs font-bold uppercase tracking-wider flex items-center justify-center space-x-1"
+          >
+            <ShoppingBag className="w-3.5 h-3.5" />
+            <span>Add</span>
+          </button>
+          <Link href="/checkout">
+            <button className="bg-[#A56B4F] text-white py-2.5 px-4 rounded-xl text-xs font-bold uppercase tracking-wider">
+              Buy
+            </button>
+          </Link>
+        </div>
+      </div>
+
+      {/* Lightbox Modal */}
+      <LightboxModal
+        images={galleryImages}
+        currentIndex={lightboxIndex}
+        isOpen={isLightboxOpen}
+        onClose={() => setIsLightboxOpen(false)}
+        onSelectIndex={(idx) => setLightboxIndex(idx)}
+      />
+
+      {/* Comparison Modal */}
+      <ProductComparisonModal
+        products={[product, ...recommendedProducts.slice(0, 2)]}
+        isOpen={isCompareOpen}
+        onClose={() => setIsCompareOpen(false)}
+      />
 
       <Footer />
     </div>
