@@ -16,7 +16,10 @@ import {
   FileSpreadsheet,
   Settings, 
   LogOut,
-  ExternalLink
+  ExternalLink,
+  RefreshCw,
+  Star,
+  Palette
 } from "lucide-react";
 
 export default function MerchantSidebar() {
@@ -43,6 +46,7 @@ export default function MerchantSidebar() {
       group: "SALES",
       items: [
         { name: "Orders", href: "/admin/orders", icon: ShoppingBag },
+        { name: "Returns & Refunds", href: "/admin/returns", icon: RefreshCw },
         { name: "Coupons", href: "/admin/coupons", icon: Ticket },
       ],
     },
@@ -50,6 +54,7 @@ export default function MerchantSidebar() {
       group: "CUSTOMERS",
       items: [
         { name: "Customers", href: "/admin/customers", icon: Users },
+        { name: "Reviews Queue", href: "/admin/reviews", icon: Star },
         { name: "Support Desk", href: "/admin/support", icon: LifeBuoy },
       ],
     },
@@ -63,6 +68,7 @@ export default function MerchantSidebar() {
       group: "SYSTEM",
       items: [
         { name: "Store Settings", href: "/admin/settings", icon: Settings },
+        { name: "Store Branding", href: "/admin/branding", icon: Palette },
       ],
     },
   ];
